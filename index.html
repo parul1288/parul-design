@@ -116,37 +116,52 @@ nav {
 /* ── CASE STUDY CARDS ────────────────────────────────────── */
 .work-section { padding: 80px 0; }
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
 .card {
   background: var(--bg-card); border-radius: 12px;
   border: 0.5px solid rgba(0,0,0,0.07); overflow: hidden;
   display: block; color: inherit;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.card:hover { transform: translateY(-4px); box-shadow: 0 14px 44px rgba(0,0,0,0.09); }
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 44px rgba(0,0,0,0.09);
+}
+
+/* Card thumbnail — base */
 .card-thumb {
-  height: 200px; overflow: hidden; position: relative;
+  height: 240px; overflow: hidden; position: relative;
   display: flex; align-items: center; justify-content: center;
 }
-.card-thumb img {
-  width: 100%; height: 100%; object-fit: cover;
-  object-position: center top;
+
+/* Alectio: landscape before/after — cover, show full composition */
+.card-alectio { background: #F0EFED; }
+.card-alectio .card-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center center;
   transition: transform 0.4s ease;
 }
-.card:hover .card-thumb img { transform: scale(1.03); }
+.card-alectio:hover .card-thumb img { transform: scale(1.03); }
 
-/* Alectio: landscape before/after — cover fills the thumb naturally */
-.thumb-alectio { background: #F4F3F1; }
-.thumb-alectio img { object-fit: cover; object-position: center center; }
+/* Phone mockups: transparent PNG floats on stone bg */
+.card-phone { background: var(--bg-card); }
+.card-phone .card-thumb {
+  padding: 20px 32px 0;
+  align-items: flex-end;
+}
+.card-phone .card-thumb img {
+  width: auto;
+  max-width: 100%;
+  height: 220px;
+  object-fit: contain;
+  object-position: center bottom;
+  transition: transform 0.4s ease;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.12));
+}
+.card-phone:hover .card-thumb img { transform: translateY(-4px); }
 
-/* Plant Care: phone mockup already has warm bg baked in — use white card bg, contain */
-.thumb-plant { background: #FFFFFF; }
-.thumb-plant img { object-fit: contain; background: #FFFFFF; padding: 16px 24px 0; object-position: center top; }
-
-/* WhatsApp: same treatment */
-.thumb-wa { background: #FFFFFF; }
-.thumb-wa img { object-fit: contain; background: #FFFFFF; padding: 16px 24px 0; object-position: center top; }
-
-.card-body { padding: 20px 22px 24px; }
+.card-body { padding: 20px 22px 26px; }
 .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
 .tag {
   font-size: 9px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
@@ -212,7 +227,7 @@ nav {
 }
 .fn-logo img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
 .fn-logo-text { font-size: 12px; color: var(--on-dark2); line-height: 1.4; }
-.fn-logo-text strong { display: block; color: var(--on-dark); font-weight: 400; font-size: 13px; letter-spacing: 0.03em; }
+.fn-logo-text strong { display: block; color: var(--on-dark); font-weight: 400; font-size: 13px; }
 .fn-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
 .fn-tag {
   font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
@@ -227,34 +242,20 @@ nav {
 }
 .fn-btn:hover { border-color: var(--clay); background: rgba(232,168,130,0.07); }
 
-/* Field Notes gallery — 2x2 masonry feel */
+/* Field Notes gallery */
 .fn-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.fn-slot {
-  border-radius: 10px; overflow: hidden;
-  border: 0.5px solid rgba(255,255,255,0.06);
-}
-.fn-slot img {
-  width: 100%; height: 100%; object-fit: cover; display: block;
-  transition: transform 0.4s ease;
-}
+.fn-slot { border-radius: 10px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.06); }
+.fn-slot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
 .fn-slot:hover img { transform: scale(1.04); }
-/* Top two: taller portrait crops */
 .fn-slot-1 { aspect-ratio: 3/4; }
 .fn-slot-2 { aspect-ratio: 3/4; }
-/* Bottom two: wider landscape crops */
 .fn-slot-3 { aspect-ratio: 4/3; }
 .fn-slot-4 { aspect-ratio: 4/3; }
-
-/* Tulip table — crop out the pipe (top-left bg) by focusing lower-center */
-.fn-slot-tulip img { object-position: center 60%; }
 
 /* ── ABOUT ───────────────────────────────────────────────── */
 .about-section { padding: 88px 0; }
 .about-inner { display: grid; grid-template-columns: 280px 1fr; gap: 64px; align-items: start; }
-.about-photo {
-  aspect-ratio: 3/4; border-radius: 12px; overflow: hidden;
-  border: 0.5px solid rgba(0,0,0,0.07);
-}
+.about-photo { aspect-ratio: 3/4; border-radius: 12px; overflow: hidden; border: 0.5px solid rgba(0,0,0,0.07); }
 .about-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .about-h {
   font-family: var(--fd); font-size: clamp(24px, 3vw, 34px);
@@ -301,7 +302,6 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
   .card-grid { grid-template-columns: 1fr; }
   .exp-grid { grid-template-columns: 1fr; }
   .fn-inner { grid-template-columns: 1fr; gap: 40px; }
-  .fn-gallery { grid-template-columns: 1fr 1fr; }
   .about-inner { grid-template-columns: 1fr; }
   .about-photo { max-width: 260px; }
 }
@@ -312,7 +312,7 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
 <!-- ── NAV ─────────────────────────────────────────────────── -->
 <nav>
   <div class="nav-inner">
-    <a href="/" class="nav-logo">Parul Tater</a>
+    <a href="index.html" class="nav-logo">Parul Tater</a>
     <ul class="nav-links">
       <li><a href="#work" class="active">Work</a></li>
       <li><a href="#explorations">Explorations</a></li>
@@ -353,12 +353,11 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
 
     <div class="card-grid">
 
-      <!-- Alectio -->
-      <a href="alectio.html" class="card">
-        <div class="card-thumb thumb-alectio">
-          <!-- Rename file to: assets/images/alectio-before-after.png -->
+      <!-- Alectio — landscape before/after image -->
+      <a href="alectio.html" class="card card-alectio">
+        <div class="card-thumb">
           <img src="assets/images/alectio-before-after.png"
-               alt="Alectio onboarding redesign — before and after comparison">
+               alt="Alectio onboarding redesign — before and after">
         </div>
         <div class="card-body">
           <div class="card-tags">
@@ -368,17 +367,17 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
           </div>
           <div class="card-title">Alectio Onboarding Redesign</div>
           <div class="card-desc">
-            Simplifying project setup for ML scientists on a sustainable data-prep
-            platform. Research, wireframes, and Angular implementation — owned end to end.
+            Simplifying project setup for ML scientists on a sustainable
+            data-prep platform. Research, wireframes, and Angular
+            implementation — owned end to end.
           </div>
           <div class="card-link">View case study →</div>
         </div>
       </a>
 
-      <!-- Plant Care -->
-      <a href="plant-care.html" class="card" style="background:#FFFFFF;">
-        <div class="card-thumb thumb-plant">
-          <!-- Rename file to: assets/images/plant-care.png -->
+      <!-- Plant Care — transparent PNG phone mockup -->
+      <a href="plant-care.html" class="card card-phone">
+        <div class="card-thumb">
           <img src="assets/images/plant-care.png"
                alt="Plant Care Companion app — my plants screen">
         </div>
@@ -390,17 +389,17 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
           </div>
           <div class="card-title">Plant Care Companion</div>
           <div class="card-desc">
-            A calmer way to care for plants — space-based organization, gentle
-            reminders, and a tone that builds confidence rather than guilt.
+            A calmer way to care for plants — space-based organization,
+            gentle reminders, and a tone that builds confidence rather
+            than guilt.
           </div>
           <div class="card-link">View case study →</div>
         </div>
       </a>
 
-      <!-- WhatsApp Polls -->
-      <a href="whatsapp-polls.html" class="card" style="background:#FFFFFF;">
-        <div class="card-thumb thumb-wa">
-          <!-- Rename file to: assets/images/whatsapp-polls.png -->
+      <!-- WhatsApp Polls — transparent PNG phone mockup -->
+      <a href="whatsapp-polls.html" class="card card-phone">
+        <div class="card-thumb">
           <img src="assets/images/whatsapp-polls.png"
                alt="WhatsApp Polls concept — group chat with poll">
         </div>
@@ -412,8 +411,9 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
           </div>
           <div class="card-title">WhatsApp Polls</div>
           <div class="card-desc">
-            A feature concept designed and usability-tested before WhatsApp shipped
-            polls — prescient in its core interaction model.
+            A feature concept designed and usability-tested before
+            WhatsApp shipped polls — prescient in its core
+            interaction model.
           </div>
           <div class="card-link">View case study →</div>
         </div>
@@ -431,20 +431,18 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
     <p class="sec-sub" style="margin-bottom: 28px;">
       Shorter, scrappier, and sometimes more honest than a full case study.
     </p>
-
     <div class="exp-grid">
       <a href="event-board.html" class="exp-card"
          style="border-color: rgba(196,112,75,0.22); background: #FAFAF8;">
         <span class="exp-tag">0→1 Build · Mobile · Web · 2025</span>
         <div class="exp-title">Event Board</div>
         <div class="exp-desc">
-          A two-week build where design and development happened simultaneously.
-          Group planning decisions, shared tasks, and expenses — for friend groups
-          who live in WhatsApp.
+          A two-week build where design and development happened
+          simultaneously. Group planning decisions, shared tasks, and
+          expenses — for friend groups who live in WhatsApp.
         </div>
         <span class="exp-link">View project →</span>
       </a>
-
       <div class="exp-card exp-placeholder">
         <span class="exp-tag">Coming soon</span>
         <div class="exp-title">More explorations</div>
@@ -463,8 +461,6 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
 <section class="fn-section" id="field-notes">
   <div class="wrap">
     <div class="fn-inner">
-
-      <!-- Left: text -->
       <div>
         <span class="fn-eye">Field Notes</span>
         <h2 class="fn-h">
@@ -475,10 +471,7 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
           I collect moments of considered design — physical and digital —
           and notice what they share with the products I build.
         </p>
-
-        <!-- Chaska Life logo lockup -->
         <div class="fn-logo">
-          <!-- Rename to: assets/images/chaska-logo.png (use the warm/cream version) -->
           <img src="assets/images/chaska-logo.png" alt="Chaska Life logo">
           <div class="fn-logo-text">
             <strong>The Chaska Life</strong>
@@ -486,47 +479,34 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
             focused on human-centered gatherings.
           </div>
         </div>
-
         <div class="fn-tags">
           <span class="fn-tag">Event styling</span>
           <span class="fn-tag">Tablescapes</span>
           <span class="fn-tag">Real-world UX</span>
           <span class="fn-tag">Observations</span>
         </div>
-        <a href="field-notes.html" class="fn-btn">Explore Field Notes</a>
+        <a href="#" class="fn-btn">Explore Field Notes</a>
       </div>
 
-      <!-- Right: photo gallery 2x2 -->
+      <!-- Gallery: 2×2 -->
       <div class="fn-gallery">
-        <!-- Slot 1: Outdoor thali table with Chaska Life menu card (portrait) -->
-        <!-- Rename to: assets/images/fn-thali-table.jpg -->
         <div class="fn-slot fn-slot-1">
           <img src="assets/images/fn-thali-table.jpg"
-               alt="Outdoor Rajasthani thali table styled by The Chaska Life">
+               alt="Outdoor Rajasthani thali table — The Chaska Life">
         </div>
-
-        <!-- Slot 2: Candlelit indoor dinner spread (portrait) -->
-        <!-- Rename to: assets/images/fn-candlelit.jpg -->
         <div class="fn-slot fn-slot-2">
-          <img src="assets/images/fn-candlelit.jpg"
-               alt="Candlelit indoor dinner gathering">
+          <img src="assets/images/fn-tulip-table.png"
+               alt="Outdoor tulip table setting with woven placemats">
         </div>
-
-        <!-- Slot 3: Indoor brunch with lily arrangements (landscape) -->
-        <!-- Rename to: assets/images/fn-brunch.jpg -->
         <div class="fn-slot fn-slot-3">
           <img src="assets/images/fn-brunch.jpg"
-               alt="Indoor brunch table with lily flower arrangements">
+               alt="Indoor golden hour brunch spread">
         </div>
-
-        <!-- Slot 4: Tulip outdoor table — cropped via object-position to avoid the pipe -->
-        <!-- Rename to: assets/images/fn-tulip-table.jpg -->
-        <div class="fn-slot fn-slot-4 fn-slot-tulip">
-          <img src="assets/images/fn-tulip-table.jpg"
-               alt="Outdoor tulip table setting with woven placemats and gold cutlery">
+        <div class="fn-slot fn-slot-4">
+          <img src="assets/images/fn-candlelit.jpg"
+               alt="Candlelit evening dinner feast">
         </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -535,12 +515,9 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
 <section class="about-section" id="about">
   <div class="wrap">
     <div class="about-inner">
-
       <div class="about-photo">
-        <!-- Rename to: assets/images/parul-photo.jpg (use IMG_7244.jpeg — fairy lights portrait) -->
         <img src="assets/images/parul-photo.jpg" alt="Parul Tater">
       </div>
-
       <div>
         <span class="overline">About</span>
         <h2 class="about-h">
@@ -555,10 +532,10 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
           to shipping and validation.
         </p>
         <p class="about-p">
-          I'm returning to tech with a clearer sense of what I want: design products
-          that are well thought through and well built. I learn by making things real.
+          I'm returning to tech with a clearer sense of what I want: design
+          products that are well thought through and well built. I learn by
+          making things real.
         </p>
-
         <div class="skills-grid">
           <div>
             <div class="skill-lbl">Design</div>
@@ -576,14 +553,11 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
             </div>
           </div>
         </div>
-
         <div class="about-links">
-          <a href="about.html" class="alink">Full story →</a>
           <a href="assets/parul-tater-resume.pdf" class="alink">Download resume →</a>
           <a href="https://linkedin.com/in/parul-tater" target="_blank" class="alink">LinkedIn →</a>
         </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -602,7 +576,6 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
 </footer>
 
 <script>
-  // Active nav on scroll
   const ids = ['home','work','explorations','field-notes','about'];
   const links = document.querySelectorAll('.nav-links a');
   const obs = new IntersectionObserver(entries => {
