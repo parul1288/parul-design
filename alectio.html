@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alectio Onboarding Redesign — Parul Tater</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+<style>
+  /* GLightbox overrides to match design system */
+  .glightbox-clean .gslide-description { background: var(--bg-dark, #1A1410); }
+  .glightbox-clean .gdesc-inner { font-family: 'DM Sans', system-ui, sans-serif; }
+  .glightbox-clean .gslide-title { color: #F5ECD7; font-size: 13px; font-weight: 400; }
+  .glightbox-clean .gslide-desc  { color: #C4A882; font-size: 12px; }
+  .glightbox-clean .gprev, .glightbox-clean .gnext { background: rgba(26,20,16,0.7); }
+  /* Clickable image cursor */
+  a.glightbox img { cursor: zoom-in; transition: opacity 0.2s; }
+  a.glightbox:hover img { opacity: 0.9; }
+</style>
+<style>
+  /* ============================================================
+     DESIGN TOKENS — from Parul Tater Design System v1.0
+     ============================================================ */
+  :root {
+    --bg-page:        #FFFFFF;
+    --bg-card:        #F4F3F1;
+    --bg-dark:        #1A1410;
+    --text-primary:   #1A1410;
+    --text-body:      #3D2E24;
+    --text-caption:   #5C4030;
+    --text-on-dark:   #F5ECD7;
+    --text-on-dark-2: #C4A882;
+    --tc:             #C4704B;
+    --sienna:         #8B4513;
+    --clay:           #E8A882;
+    --gold:           #D4A847;
+    --leaf:           #4A6741;
+    --font-display:   'Cormorant Garamond', Georgia, serif;
+    --font-body:      'DM Sans', system-ui, sans-serif;
+    --sp-1:  8px;
+    --sp-2:  16px;
+    --sp-3:  24px;
+    --sp-4:  32px;
+    --sp-6:  48px;
+    --sp-8:  64px;
+    --sp-12: 96px;
+    --sp-16: 128px;
+    --r-sm:  4px;
+    --r-md:  8px;
+    --r-lg:  12px;
+    --r-pill: 40px;
+    --border: 0.5px solid rgba(0,0,0,0.09);
+    --border-accent: 1px solid var(--tc);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg-page);
+    color: var(--text-body);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============================================================
+     NAV — matches index.html exactly
+     ============================================================ */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 0.5px solid rgba(0,0,0,0.07);
+    padding: 18px 0;
+  }
+  .nav-inner {
+    max-width: 1000px; margin: 0 auto; padding: 0 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px; color: var(--text-caption); letter-spacing: 0.04em;
+    transition: color 0.2s; position: relative; padding-bottom: 2px;
+    text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--tc); }
+  .nav-links a.active {
+    color: var(--text-primary); font-weight: 500;
+    border-bottom: 1px solid var(--tc);
+  }
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--sp-4);
+  }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero {
+    padding-top: 80px;
+    padding-bottom: var(--sp-12);
+    border-bottom: var(--border);
+  }
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--tc);
+    margin-bottom: var(--sp-2);
+    font-weight: 500;
+  }
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(38px, 6vw, 64px);
+    color: var(--text-primary);
+    font-weight: 300;
+    line-height: 1.05;
+    margin-bottom: var(--sp-2);
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--sienna);
+  }
+  .hero-subtitle {
+    font-family: var(--font-display);
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--text-caption);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: var(--sp-6);
+    max-width: 560px;
+  }
+
+  /* Meta grid */
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-3);
+    padding: var(--sp-4) 0;
+    border-top: var(--border);
+    border-bottom: var(--border);
+    margin-bottom: var(--sp-8);
+  }
+  .meta-item {}
+  .meta-label {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--tc);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .meta-val {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  /* Hero image */
+  .hero-image {
+    width: 100%;
+    border-radius: var(--r-lg);
+    border: var(--border);
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+  .hero-image img {
+    width: 100%;
+    display: block;
+  }
+  .hero-image-caption {
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--bg-card);
+    font-size: 11px;
+    color: var(--text-caption);
+    letter-spacing: 0.04em;
+    display: flex;
+    gap: var(--sp-3);
+  }
+  .hero-image-caption span { color: var(--tc); font-weight: 500; }
+
+  /* ============================================================
+     SECTION STRUCTURE
+     ============================================================ */
+  .section {
+    padding: var(--sp-12) 0;
+    border-bottom: var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .sec-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tc);
+    margin-bottom: var(--sp-2);
+    font-weight: 500;
+  }
+  .sec-number {
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--text-caption);
+    letter-spacing: 0.1em;
+    margin-bottom: var(--sp-1);
+  }
+  .sec-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 40px);
+    color: var(--text-primary);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: var(--sp-3);
+  }
+  .sec-intro {
+    font-size: 15px;
+    color: var(--text-body);
+    line-height: 1.75;
+    max-width: 640px;
+    margin-bottom: var(--sp-6);
+  }
+
+  /* ============================================================
+     PHASE NAV (sticky progress)
+     ============================================================ */
+  .phase-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: var(--sp-8);
+    border: var(--border);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+  }
+  .phase-item {
+    flex: 1;
+    text-align: center;
+    padding: 10px var(--sp-2);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-caption);
+    background: var(--bg-card);
+    border-right: var(--border);
+    font-weight: 500;
+  }
+  .phase-item:last-child { border-right: none; }
+  .phase-item.active {
+    background: var(--text-primary);
+    color: var(--text-on-dark);
+  }
+
+  /* ============================================================
+     INSIGHT CARDS
+     ============================================================ */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-6);
+  }
+  .insight-card {
+    background: var(--bg-card);
+    border-radius: var(--r-lg);
+    border: var(--border);
+    padding: var(--sp-4);
+    position: relative;
+    overflow: hidden;
+  }
+  .insight-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--tc);
+    opacity: 0.6;
+  }
+  .insight-number {
+    font-family: var(--font-display);
+    font-size: 40px;
+    color: var(--tc);
+    opacity: 0.25;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: var(--sp-1);
+  }
+  .insight-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .insight-desc {
+    font-size: 12px;
+    color: var(--text-caption);
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+
+  /* ============================================================
+     IMAGES
+     ============================================================ */
+  .img-block {
+    margin-bottom: var(--sp-6);
+  }
+  .img-block img {
+    width: 100%;
+    display: block;
+    border-radius: var(--r-lg);
+    border: var(--border);
+  }
+  .img-caption {
+    margin-top: var(--sp-1);
+    font-size: 11px;
+    color: var(--text-caption);
+    letter-spacing: 0.03em;
+    font-style: italic;
+    padding-left: var(--sp-1);
+  }
+  .img-label {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tc);
+    font-weight: 500;
+    margin-bottom: var(--sp-1);
+    font-style: normal;
+  }
+
+  /* Two-col images */
+  .img-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-6);
+  }
+  .img-two-col img {
+    width: 100%;
+    display: block;
+    border-radius: var(--r-lg);
+    border: var(--border);
+  }
+
+  /* Three-col images */
+  .img-three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-6);
+  }
+  .img-three-col img {
+    width: 100%;
+    display: block;
+    border-radius: var(--r-md);
+    border: var(--border);
+  }
+
+  /* ============================================================
+     CALLOUT / PULL QUOTE
+     ============================================================ */
+  .callout {
+    background: var(--bg-card);
+    border-left: 3px solid var(--tc);
+    border-radius: 0 var(--r-lg) var(--r-lg) 0;
+    padding: var(--sp-3) var(--sp-4);
+    margin: var(--sp-6) 0;
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--text-primary);
+    font-style: italic;
+    line-height: 1.4;
+  }
+  .callout cite {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--text-caption);
+    font-style: normal;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: var(--sp-1);
+  }
+
+  /* ============================================================
+     PROBLEM LIST
+     ============================================================ */
+  .problem-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-6);
+  }
+  .problem-list li {
+    display: flex;
+    gap: var(--sp-2);
+    align-items: flex-start;
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+  .problem-list li::before {
+    content: '—';
+    color: var(--tc);
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ============================================================
+     METRICS (replaces the table)
+     ============================================================ */
+  .metrics-dark {
+    background: var(--bg-dark);
+    border-radius: var(--r-lg);
+    padding: var(--sp-8) var(--sp-6);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--sp-6);
+  }
+  .metrics-dark::after {
+    content: '✦';
+    position: absolute;
+    top: var(--sp-4); right: var(--sp-6);
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--gold);
+    opacity: 0.3;
+  }
+  .metrics-eyebrow {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: var(--sp-4);
+    font-weight: 500;
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-6);
+  }
+  .metric-item {}
+  .metric-number {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 56px);
+    color: var(--gold);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .metric-label {
+    font-size: 13px;
+    color: var(--text-on-dark-2);
+    line-height: 1.5;
+  }
+  .metric-note {
+    font-size: 11px;
+    color: rgba(196,168,130,0.6);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ============================================================
+     WHAT WE AIMED TO IMPROVE
+     ============================================================ */
+  .aim-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-3);
+    margin: var(--sp-6) 0;
+  }
+  .aim-card {
+    padding: var(--sp-3);
+    background: var(--bg-card);
+    border-radius: var(--r-lg);
+    border: var(--border);
+  }
+  .aim-icon {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tc);
+    font-weight: 500;
+    margin-bottom: var(--sp-1);
+  }
+  .aim-title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    color: var(--text-primary);
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .aim-desc {
+    font-size: 12px;
+    color: var(--text-caption);
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     SOLUTION HIGHLIGHTS
+     ============================================================ */
+  .solution-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-6);
+  }
+  .solution-card {
+    background: var(--bg-card);
+    border-radius: var(--r-lg);
+    border: var(--border);
+    padding: var(--sp-4);
+  }
+  .solution-label {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tc);
+    margin-bottom: var(--sp-1);
+    font-weight: 500;
+  }
+  .solution-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .solution-desc {
+    font-size: 13px;
+    color: var(--text-caption);
+    line-height: 1.65;
+  }
+
+  /* ============================================================
+     REFLECTION
+     ============================================================ */
+  .reflection-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .reflection-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: var(--sp-2);
+    align-items: flex-start;
+  }
+  .reflection-num {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--tc);
+    opacity: 0.5;
+    font-weight: 300;
+    line-height: 1.1;
+  }
+  .reflection-text {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.7;
+  }
+
+  /* ============================================================
+     TAGS
+     ============================================================ */
+  .tag-row {
+    display: flex;
+    gap: var(--sp-1);
+    flex-wrap: wrap;
+    margin-bottom: var(--sp-6);
+  }
+  .tag {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: var(--r-pill);
+    display: inline-block;
+    background: transparent;
+    color: var(--sienna);
+    border: 0.5px solid #C4704B66;
+  }
+
+  /* ============================================================
+     NOTE BANNER
+     ============================================================ */
+  .note-banner {
+    background: var(--bg-card);
+    border: var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 var(--r-md) var(--r-md) 0;
+    padding: var(--sp-2) var(--sp-3);
+    margin-bottom: var(--sp-6);
+    font-size: 13px;
+    color: var(--text-caption);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* ============================================================
+     PREV / NEXT NAV
+     ============================================================ */
+  .case-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-3);
+    padding: var(--sp-8) 0;
+    border-top: var(--border);
+  }
+  .case-nav-item {
+    padding: var(--sp-4);
+    background: var(--bg-card);
+    border-radius: var(--r-lg);
+    border: var(--border);
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .case-nav-item:hover { background: #ECEAE7; }
+  .case-nav-dir {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tc);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .case-nav-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .case-nav-item.next { text-align: right; }
+
+  /* ============================================================
+     FOOTER — matches index.html exactly
+     ============================================================ */
+  footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
+  .ft-orn { font-family: var(--font-display); font-size: 16px; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 20px; }
+  .ft-h {
+    font-family: var(--font-display); font-size: clamp(22px, 3vw, 32px);
+    color: var(--text-on-dark); font-weight: 400; line-height: 1.2; margin-bottom: 8px;
+  }
+  .ft-sub { font-size: 14px; color: var(--text-on-dark-2); margin-bottom: 28px; }
+  .ft-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 44px; }
+  .flink {
+    font-size: 13px; color: var(--clay); letter-spacing: 0.04em;
+    border-bottom: 0.5px solid rgba(232,168,130,0.25);
+    padding-bottom: 1px; transition: color 0.2s; text-decoration: none;
+  }
+  .flink:hover { color: var(--text-on-dark); }
+  .ft-legal { font-size: 11px; color: rgba(196,168,130,0.35); letter-spacing: 0.06em; }
+
+  /* ============================================================
+     DIVIDER ORNAMENT
+     ============================================================ */
+  .ornament {
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--tc);
+    opacity: 0.4;
+    letter-spacing: 0.4em;
+    margin: var(--sp-6) 0;
+  }
+
+  /* ============================================================
+     ANIMATIONS
+     ============================================================ */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+  .hero-title   { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-subtitle{ animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-meta    { animation: fadeUp 0.6s 0.3s ease both; }
+  .hero-image   { animation: fadeUp 0.7s 0.4s ease both; }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 700px) {
+    nav { padding: 16px 24px; }
+    .container { padding: 0 var(--sp-3); }
+    .hero-meta { grid-template-columns: 1fr 1fr; }
+    .insights-grid { grid-template-columns: 1fr; }
+    .img-two-col { grid-template-columns: 1fr; }
+    .img-three-col { grid-template-columns: 1fr; }
+    .metrics-grid { grid-template-columns: 1fr; gap: var(--sp-4); }
+    .aim-grid { grid-template-columns: 1fr; }
+    .solution-grid { grid-template-columns: 1fr; }
+    .case-nav { grid-template-columns: 1fr; }
+    .case-nav-item.next { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Parul Tater</a>
+    <ul class="nav-links">
+      <li><a href="index.html#work" class="active">Work</a></li>
+      <li><a href="index.html#explorations">Explorations</a></li>
+      <li><a href="index.html#field-notes">Field Notes</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<div class="container">
+  <section class="hero">
+    <div class="hero-eyebrow">Case Study · B2B SaaS · UX + Frontend</div>
+    <h1 class="hero-title">Alectio<br><em>Onboarding Redesign</em></h1>
+    <p class="hero-subtitle">Simplifying project setup for a B2B ML data-prep platform</p>
+
+    <div class="tag-row">
+      <span class="tag">UX Research</span>
+      <span class="tag">User Flows</span>
+      <span class="tag">Wireframing</span>
+      <span class="tag">Frontend (Angular)</span>
+      <span class="tag">B2B · Desktop</span>
+    </div>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <div class="meta-label">Role</div>
+        <div class="meta-val">UX Developer<br>(Design + Frontend)</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Team</div>
+        <div class="meta-val">PM · ML Engineer<br>Frontend Engineer</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Tools</div>
+        <div class="meta-val">Figma · Angular</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Timeline</div>
+        <div class="meta-val">Multi-week<br>iteration</div>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <a href="assets/images/alectio-before-after.png" class="glightbox" data-gallery="alectio" data-title="Before & After — Alectio Onboarding Redesign" data-description="Left: complex sidebar-heavy layout. Right: guided step-by-step onboarding with top navigation.">
+        <img src="assets/images/alectio-before-after.png" alt="Before and after comparison of the Alectio onboarding redesign" loading="eager">
+      </a>
+      <div class="hero-image-caption">
+        <span>Before</span> Complex, sidebar-heavy layout with unclear hierarchy &nbsp;→&nbsp; <span>After</span> Guided step-by-step onboarding with top navigation
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       01. DISCOVER
+       ============================================================ -->
+  <section class="section">
+    <div class="sec-label">01 — Discover</div>
+    <h2 class="sec-title">Understanding where<br>users got stuck</h2>
+    <p class="sec-intro">Alectio's platform was primarily used by ML scientists and engineers on desktop. I conducted user interviews and walkthroughs of the existing onboarding flow to understand what motivated users, where they got stuck, and what slowed down project setup.</p>
+
+    <p style="font-size:13px; color:var(--text-caption); margin-bottom:var(--sp-3);">
+      <strong style="color:var(--text-primary); font-weight:500;">Methods:</strong> User interviews · Walkthroughs of the existing onboarding flow
+    </p>
+
+    <p style="font-size:14px; color:var(--text-body); line-height:1.7; margin-bottom:var(--sp-6);">I pulled out the repeated blockers across interviews and used them to prioritize which onboarding steps needed the most clarity.</p>
+
+    <!-- Critique images -->
+    <div class="img-block">
+      <span class="img-label">Existing UI — critique</span>
+      <a href="assets/images/alectio/alectio-critique-01.jpg" class="glightbox" data-gallery="alectio" data-title="Existing UI — Data Type redundancy" data-description="Users could select data type in two places, creating confusion about which field was authoritative.">
+        <img src="assets/images/alectio/alectio-critique-01.jpg" alt="Existing Alectio UI showing redundant data type selection" loading="lazy">
+      </a>
+      <p class="img-caption">Redundant data type entry — users could select data in two places, creating confusion about which field was authoritative.</p>
+    </div>
+
+    <div class="img-two-col">
+      <div class="img-block" style="margin-bottom:0">
+        <a href="assets/images/alectio/alectio-critique-02.jpg" class="glightbox" data-gallery="alectio" data-title="Existing UI — Model details missing from summary" data-description="Users couldn't verify their model selections before submitting the project.">
+          <img src="assets/images/alectio/alectio-critique-02.jpg" alt="Model details missing from project summary" loading="lazy">
+        </a>
+        <p class="img-caption">Model details not reflected in the project summary — users couldn't verify their selections before submitting.</p>
+      </div>
+      <div class="img-block" style="margin-bottom:0">
+        <a href="assets/images/alectio/alectio-critique-03.jpg" class="glightbox" data-gallery="alectio" data-title="Existing UI — Redundant project name fields" data-description="Two project name fields that updated independently — eroding trust in the interface.">
+          <img src="assets/images/alectio/alectio-critique-03.jpg" alt="Redundant project name fields" loading="lazy">
+        </a>
+        <p class="img-caption">Two project name fields that updated independently — a confusing inconsistency that eroded trust in the interface.</p>
+      </div>
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <!-- Key insights -->
+    <h3 style="font-family:var(--font-display); font-size:22px; color:var(--text-primary); font-weight:400; margin-bottom:var(--sp-3);">User Research — Key Insights</h3>
+    <p style="font-size:14px; color:var(--text-caption); margin-bottom:var(--sp-4);">These themes highlighted where users lost time or confidence during setup and guided the onboarding changes we prioritized.</p>
+
+    <div class="insights-grid">
+      <div class="insight-card">
+        <div class="insight-number">01</div>
+        <div class="insight-text">Users wanted a faster "time to first project" with fewer early decisions</div>
+        <div class="insight-desc">Too many choices upfront created decision fatigue before users had even started.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-number">02</div>
+        <div class="insight-text">Too many entry points and options made onboarding feel overwhelming</div>
+        <div class="insight-desc">Multiple starting paths meant users weren't sure where to begin — or if they'd begun correctly.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-number">03</div>
+        <div class="insight-text">Lack of progress visibility created uncertainty about what's next</div>
+        <div class="insight-desc">No clear sense of how far along they were, or how many more steps remained.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-number">04</div>
+        <div class="insight-text">Clearer labels and contextual help reduced confusion during setup</div>
+        <div class="insight-desc">Small wording improvements had outsized impact on confidence during the flow.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       02. DEFINE
+       ============================================================ -->
+  <section class="section">
+    <div class="sec-label">02 — Define</div>
+    <h2 class="sec-title">Translating research<br>into direction</h2>
+    <p class="sec-intro">I translated research into a clear direction by defining success criteria and prioritizing the highest-impact areas. This helped align the team on what "better onboarding" meant for ML practitioners and what we would change first.</p>
+
+    <div class="callout">
+      The goal wasn't to redesign everything — it was to reduce the number of decisions a user had to make before feeling oriented and in control.
+      <cite>Design principle that guided the work</cite>
+    </div>
+
+    <div class="aim-grid">
+      <div class="aim-card">
+        <div class="aim-icon">Step visibility</div>
+        <div class="aim-title">Master-detail progress</div>
+        <div class="aim-desc">Users should always know what's done and what's next — no guessing how many steps remain.</div>
+      </div>
+      <div class="aim-card">
+        <div class="aim-icon">Guided setup</div>
+        <div class="aim-title">Wizard-style flow</div>
+        <div class="aim-desc">A single, sequential path with prefilled defaults where possible to reduce friction on each step.</div>
+      </div>
+      <div class="aim-card">
+        <div class="aim-icon">Clarity</div>
+        <div class="aim-title">Tooltips + simpler labels</div>
+        <div class="aim-desc">Contextual help and plain-language labels to reduce hesitation at every decision point.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       03. DESIGN
+       ============================================================ -->
+  <section class="section">
+    <div class="sec-label">03 — Design</div>
+    <h2 class="sec-title">Exploring two<br>redesign tracks</h2>
+    <p class="sec-intro">I explored two redesign tracks — platform layout and project onboarding — by mapping key flows and iterating through low-fidelity concepts with the team. With feedback from engineering and ML stakeholders, sketches and wireframes helped us quickly test structure, reduce cognitive load, clarify next steps, and converge on a guided setup experience.</p>
+
+    <h3 style="font-family:var(--font-display); font-size:22px; color:var(--text-primary); font-weight:400; margin-bottom:var(--sp-2);">Platform Layout Exploration</h3>
+    <p style="font-size:14px; color:var(--text-body); line-height:1.7; margin-bottom:var(--sp-4);">The existing UI relied on a sidebar packed with actions and lacked a clear hierarchy, while the top bar was underutilized. I explored a layout that elevated top navigation and grouped functionality into primary views — Dashboard and Projects — with user controls separated to the top right for faster access.</p>
+
+    <div class="img-block">
+      <span class="img-label">Updated User Flow</span>
+      <a href="assets/images/alectio/alectio-userflow.png" class="glightbox" data-gallery="alectio" data-title="Updated User Flow" data-description="Mapping the full onboarding flow revealed where branching paths created confusion.">
+        <img src="assets/images/alectio/alectio-userflow.png" alt="Updated user flow diagram for Alectio onboarding" loading="lazy">
+      </a>
+      <p class="img-caption">Mapping the full onboarding flow revealed where branching paths created confusion — and where a single guided path would reduce cognitive load.</p>
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <h3 style="font-family:var(--font-display); font-size:22px; color:var(--text-primary); font-weight:400; margin-bottom:var(--sp-2);">Onboarding Exploration</h3>
+    <p style="font-size:14px; color:var(--text-body); line-height:1.7; margin-bottom:var(--sp-4);">Creating a project is the entry point to most workflows in Alectio. The existing experience offered multiple starting paths and required too many decisions upfront — which made setup feel slow and error-prone. I used quick hand sketches to map out the proposed step-by-step flow before translating it into digital wireframes.</p>
+
+    <div class="img-block">
+      <span class="img-label">Early sketches — proposed onboarding flow</span>
+      <a href="assets/images/alectio/alectio-sketches-grid.jpg" class="glightbox" data-gallery="alectio" data-title="Early sketches — proposed onboarding flow" data-description="Six-step flow: Project Name → Data Type → Data Source → Dataset Source → Model Type → Project Summary.">
+        <img src="assets/images/alectio/alectio-sketches-grid.jpg" alt="Hand-drawn sketches showing the proposed onboarding flow across 6 steps" loading="lazy">
+      </a>
+      <p class="img-caption">Six-step onboarding flow sketched out: Project Name → Data Type → Data Source → Dataset Source → Model Type → Project Summary. Each step surfacing one clear decision.</p>
+    </div>
+
+    <div class="img-two-col">
+      <div class="img-block" style="margin-bottom:0">
+        <span class="img-label">Digital wireframe — step 3</span>
+        <a href="assets/images/alectio/alectio-sketch-01.png" class="glightbox" data-gallery="alectio" data-title="Digital wireframe — Choose Dataset Source" data-description="Clear visual options replace a dropdown buried in a form.">
+          <img src="assets/images/alectio/alectio-sketch-01.png" alt="Digital wireframe showing Choose Dataset Source step" loading="lazy">
+        </a>
+        <p class="img-caption">Choose dataset source — Alectio's library or on-premise. Clear visual options replace a dropdown buried in a form.</p>
+      </div>
+      <div class="img-block" style="margin-bottom:0">
+        <span class="img-label">Digital wireframe — step 4</span>
+        <a href="assets/images/alectio/alectio-sketch-02.png" class="glightbox" data-gallery="alectio" data-title="Digital wireframe — Specify Labeling Classes" data-description="Fill in manually or upload a file. Tooltip helps users understand the impact of their choice.">
+          <img src="assets/images/alectio/alectio-sketch-02.png" alt="Digital wireframe showing Specify Labeling Classes step" loading="lazy">
+        </a>
+        <p class="img-caption">Specify labeling classes — fill in manually or upload a file. Tooltip helps users understand the impact of their choice.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       04. DELIVER
+       ============================================================ -->
+  <section class="section">
+    <div class="sec-label">04 — Deliver</div>
+    <h2 class="sec-title">Shipping the redesign</h2>
+
+    <div class="note-banner">
+      Note: Final high-fidelity visuals aren't included due to company access constraints — this case study focuses on flow, wireframes, and the shipped interaction changes.
+    </div>
+
+    <p style="font-size:15px; color:var(--text-body); line-height:1.75; margin-bottom:var(--sp-6);">I shared the refined flow and low-fi wireframes with the product designer for high-fidelity mockups, then supported implementation in Angular alongside the engineering team.</p>
+
+    <div class="solution-grid">
+      <div class="solution-card">
+        <div class="solution-label">Final layout decision</div>
+        <div class="solution-title">Elevated top navigation, clearer hierarchy</div>
+        <div class="solution-desc">Primary views (Dashboard / Projects) were easier to find, while user controls (notifications/profile) stayed consistently accessible in the top right.</div>
+      </div>
+      <div class="solution-card">
+        <div class="solution-label">Final onboarding structure</div>
+        <div class="solution-title">Guided setup with step visibility</div>
+        <div class="solution-desc">A sequential wizard with clear next actions — designed to reduce hesitation and speed up project creation from the first session.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       05. IMPACT
+       ============================================================ -->
+  <section class="section">
+    <div class="sec-label">05 — Impact</div>
+    <h2 class="sec-title">Results</h2>
+
+    <div class="metrics-dark">
+      <div class="metrics-eyebrow">Post-launch outcomes — early user testing</div>
+      <div class="metrics-grid">
+        <div class="metric-item">
+          <div class="metric-number">4 / 5</div>
+          <div class="metric-label">Users completed project setup without needing assistance</div>
+          <div class="metric-note">Small sample; directionally positive</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">↓</div>
+          <div class="metric-label">Reduced friction at the data source step — previously the most common point of confusion</div>
+          <div class="metric-note">Observed during walkthroughs</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-number">+</div>
+          <div class="metric-label">Positive post-launch survey sentiment, with one recurring ask: stronger value messaging at each step</div>
+          <div class="metric-note">Attitudinal · dashboard survey</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:14px; color:var(--text-body); line-height:1.75;">We ran a short dashboard survey before and after the launch, asking users to rate statements on a Strongly Disagree → Strongly Agree scale. Post-launch feedback was mostly positive, with a clear request for stronger value messaging to help users understand the impact of their actions.</p>
+  </section>
+
+  <!-- ============================================================
+       06. REFLECTION
+       ============================================================ -->
+  <section class="section">
+    <div class="sec-label">06 — Reflection</div>
+    <h2 class="sec-title">What I learned</h2>
+    <p class="sec-intro">Alectio was a turning point — moving from primarily front-end execution into a more customer-facing, UX-driven role where I helped shape what we built and why.</p>
+
+    <div class="reflection-list">
+      <div class="reflection-item">
+        <div class="reflection-num">01</div>
+        <div class="reflection-text">Working closely with a product designer and customer success helped me turn real customer feedback into clearer flows and better defaults — not just UI polish.</div>
+      </div>
+      <div class="reflection-item">
+        <div class="reflection-num">02</div>
+        <div class="reflection-text">Partnering with ML engineers taught me to respect domain nuance and constraints while still pushing for simplicity and clarity in the experience.</div>
+      </div>
+      <div class="reflection-item">
+        <div class="reflection-num">03</div>
+        <div class="reflection-text">I learned to look beyond the "happy path" by spotting hidden assumptions and expert workarounds — then designing onboarding that supports both new users and power users.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE NAV -->
+  <div class="case-nav">
+    <a href="index.html#work" class="case-nav-item">
+      <div class="case-nav-dir">← Back to</div>
+      <div class="case-nav-title">All Work</div>
+    </a>
+    <a href="index.html#work" class="case-nav-item next">
+      <div class="case-nav-dir">Next →</div>
+      <div class="case-nav-title">Plant Care Companion App</div>
+    </a>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-orn">✦ · ✦</div>
+  <h2 class="ft-h">Like what you see?<br>Let's chat.</h2>
+  <p class="ft-sub">Open to full-time UX design roles and select freelance projects.</p>
+  <div class="ft-links">
+    <a href="mailto:parulj12@gmail.com" class="flink">parulj12@gmail.com</a>
+    <a href="https://linkedin.com/in/parul-tater" target="_blank" class="flink">LinkedIn</a>
+    <a href="assets/parul-tater-resume.pdf" class="flink">Resume PDF</a>
+  </div>
+  <div class="ft-legal">All rights reserved · Parul Tater © 2025</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  const lightbox = GLightbox({
+    touchNavigation: true,
+    loop: true,
+    autoplayVideos: false,
+    openEffect: 'fade',
+    closeEffect: 'fade',
+    slideEffect: 'slide',
+    descPosition: 'bottom',
+  });
+</script>
+</body>
+</html>
