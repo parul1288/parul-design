@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Parul Tater</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --bg:        #FFFFFF;
+  --bg-card:   #F4F3F1;
+  --bg-warm:   #FAF8F5;
+  --bg-dark:   #1A1410;
+  --t1:        #1A1410;
+  --t2:        #3D2E24;
+  --t3:        #5C4030;
+  --on-dark:   #F5ECD7;
+  --on-dark2:  #C4A882;
+  --tc:        #C4704B;
+  --sienna:    #8B4513;
+  --clay:      #E8A882;
+  --gold:      #D4A847;
+  --leaf:      #4A6741;
+  --leaf-light:#E8EFE6;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fb: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--fb); background: var(--bg); color: var(--t2); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+
+/* ── NAV ────────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  padding: 18px 0;
+}
+.nav-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--fd); font-size: 19px; font-weight: 400; color: var(--t1); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--t3); letter-spacing: 0.04em; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--tc); }
+
+/* ── HERO ───────────────────────────────────────────────────── */
+.about-hero {
+  padding: 80px 0 72px;
+  position: relative;
+}
+.about-hero::before {
+  content: '';
+  position: absolute; left: 0; top: 80px;
+  width: 3px; height: 200px;
+  background: linear-gradient(to bottom, var(--tc), transparent);
+}
+.about-hero-inner {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 72px;
+  align-items: start;
+}
+
+/* Photo */
+.about-photo-wrap {
+  position: relative;
+}
+.about-photo {
+  aspect-ratio: 4/5;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.07);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+}
+.about-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  display: block;
+}
+.about-photo-caption {
+  font-size: 11px; color: var(--t3); letter-spacing: 0.04em;
+  margin-top: 12px; text-align: center; line-height: 1.5;
+}
+
+/* Hero text */
+.about-eye {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--tc);
+  display: block; margin-bottom: 16px;
+}
+.about-h1 {
+  font-family: var(--fd); font-size: clamp(36px, 4.5vw, 56px);
+  font-weight: 300; color: var(--t1); line-height: 1.05;
+  margin-bottom: 24px;
+}
+.about-h1 em { font-style: italic; color: var(--sienna); font-weight: 400; }
+.about-tagline {
+  font-size: 17px; color: var(--t2); line-height: 1.72;
+  max-width: 480px; margin-bottom: 36px;
+  border-left: 2px solid var(--tc);
+  padding-left: 16px;
+}
+.about-intro {
+  font-size: 15px; color: var(--t2); line-height: 1.8;
+  max-width: 520px;
+}
+.about-intro p + p { margin-top: 16px; }
+
+/* ── BODY SECTIONS ──────────────────────────────────────────── */
+.about-body { padding: 0 0 80px; }
+.about-body-inner {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 72px;
+}
+.about-sidebar {} /* intentionally empty — placeholder column */
+.about-content {}
+
+.section-rule { border: none; border-top: 0.5px solid rgba(0,0,0,0.07); margin: 56px 0; }
+
+.body-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--tc);
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+.body-label::before {
+  content: ''; display: block; width: 20px; height: 1px;
+  background: var(--tc); flex-shrink: 0;
+}
+.body-h {
+  font-family: var(--fd); font-size: clamp(22px, 2.8vw, 32px);
+  font-weight: 400; color: var(--t1); line-height: 1.15;
+  margin-bottom: 18px;
+}
+.body-h em { font-style: italic; color: var(--sienna); }
+.body-p {
+  font-size: 15px; color: var(--t2); line-height: 1.8;
+  max-width: 560px;
+}
+.body-p + .body-p { margin-top: 14px; }
+
+/* ── SKILLS ─────────────────────────────────────────────────── */
+.skills-wrap { margin-top: 48px; }
+.skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.skill-col {
+  padding: 24px 28px;
+  border: 0.5px solid rgba(0,0,0,0.08);
+  background: var(--bg-warm);
+}
+.skill-col:first-child { border-radius: 10px 0 0 10px; }
+.skill-col:last-child { border-radius: 0 10px 10px 0; border-left: none; }
+.skill-lbl {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--tc);
+  margin-bottom: 14px; display: block;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid rgba(196,112,75,0.2);
+}
+.skill-list { list-style: none; }
+.skill-list li {
+  font-size: 14px; color: var(--t2); line-height: 1.6;
+  padding: 5px 0;
+  border-bottom: 0.5px solid rgba(0,0,0,0.05);
+  display: flex; align-items: baseline; gap: 8px;
+}
+.skill-list li:last-child { border-bottom: none; }
+.skill-list li::before {
+  content: '—'; color: var(--tc); font-family: var(--fd);
+  font-size: 14px; flex-shrink: 0;
+}
+
+/* ── CHASKA CALLOUT ─────────────────────────────────────────── */
+.chaska-block {
+  background: var(--bg-dark);
+  border-radius: 12px;
+  padding: 36px 40px;
+  margin-top: 20px;
+  display: flex; align-items: flex-start; gap: 28px;
+}
+.chaska-text {}
+.chaska-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 10px; display: block;
+}
+.chaska-h {
+  font-family: var(--fd); font-size: 20px; font-weight: 400;
+  color: var(--on-dark); line-height: 1.3; margin-bottom: 10px;
+}
+.chaska-p {
+  font-size: 14px; color: var(--on-dark2); line-height: 1.72;
+}
+
+/* ── CTA LINKS ──────────────────────────────────────────────── */
+.about-links-wrap { margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap; }
+.about-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+  padding: 11px 22px; border-radius: 4px;
+  transition: all 0.2s;
+}
+.about-link-primary {
+  background: var(--t1); color: #fff;
+}
+.about-link-primary:hover { background: var(--sienna); }
+.about-link-secondary {
+  border: 1px solid rgba(0,0,0,0.18); color: var(--t1);
+}
+.about-link-secondary:hover { border-color: var(--tc); color: var(--tc); }
+.about-link svg {
+  width: 13px; height: 13px; stroke: currentColor;
+  fill: none; stroke-width: 2;
+}
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
+.ft-orn { font-family: var(--fd); font-size: 16px; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 20px; }
+.ft-h {
+  font-family: var(--fd); font-size: clamp(22px,3vw,32px);
+  color: var(--on-dark); font-weight: 400; line-height: 1.2; margin-bottom: 8px;
+}
+.ft-sub { font-size: 14px; color: var(--on-dark2); margin-bottom: 28px; }
+.ft-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 44px; }
+.flink {
+  font-size: 13px; color: var(--clay); letter-spacing: 0.04em;
+  border-bottom: 0.5px solid rgba(232,168,130,0.25);
+  padding-bottom: 1px; transition: color 0.2s;
+}
+.flink:hover { color: var(--on-dark); }
+.ft-legal { font-size: 11px; color: rgba(196,168,130,0.35); letter-spacing: 0.06em; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .wrap { padding: 0 20px; }
+  .nav-inner { padding: 0 20px; }
+  .about-hero-inner { grid-template-columns: 1fr; gap: 36px; }
+  .about-photo { aspect-ratio: 3/2; max-width: 320px; }
+  .about-body-inner { grid-template-columns: 1fr; gap: 0; }
+  .about-sidebar { display: none; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .skill-col:first-child { border-radius: 10px 10px 0 0; }
+  .skill-col:last-child { border-radius: 0 0 10px 10px; border-left: 0.5px solid rgba(0,0,0,0.08); border-top: none; }
+  .chaska-block { flex-direction: column; gap: 16px; }
+  .about-links-wrap { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Parul Tater</a>
+    <ul class="nav-links">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#explorations">Explorations</a></li>
+      <li><a href="index.html#field-notes">Field Notes</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section class="about-hero">
+  <div class="wrap">
+    <div class="about-hero-inner">
+
+      <div class="about-photo-wrap">
+        <div class="about-photo">
+          <img src="assets/images/parul-photo.jpg" alt="Parul Tater">
+        </div>
+        <p class="about-photo-caption">Based in the Bay Area</p>
+      </div>
+
+      <div>
+        <span class="about-eye">About</span>
+        <h1 class="about-h1">
+          Hi, I'm Parul —<br>
+          <em>designer who builds,<br>builder who designs.</em>
+        </h1>
+        <p class="about-tagline">
+          I've spent eight years moving between design and engineering —
+          close enough to both to know what gets lost between them.
+        </p>
+        <div class="about-intro">
+          <p>
+            I spent eight years at the intersection of design and engineering —
+            starting as a frontend developer who cared about how things felt to use,
+            then moving into roles where I could shape what we built and why.
+            In product roles at startups, I owned work end to end: from early design
+            conversations through to implementation and validation.
+          </p>
+          <p>
+            I stepped away from full-time work to focus on family — and used
+            that time intentionally. I started The Chaska Life, an independent
+            practice focused on experience design for real-world gatherings.
+            It reminded me that the principles behind good UX aren't
+            screen-specific. I came back with sharper instincts and a clearer
+            sense of what I want to build.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── BODY ─────────────────────────────────────────────────── -->
+<div class="about-body">
+  <div class="wrap">
+    <div class="about-body-inner">
+      <div class="about-sidebar"></div>
+      <div class="about-content">
+
+        <!-- What I bring -->
+        <div>
+          <div class="body-label">What I bring</div>
+          <h2 class="body-h">The rare bit:<br><em>fluent in both languages.</em></h2>
+          <p class="body-p">
+            Most of my career has been about owning problems end to end — from
+            early research through to what actually shipped. I've sat in the design
+            conversation, written the implementation, watched users struggle with
+            what we built, and gone back to fix it. That full loop changes how you
+            design. You stop protecting the mockup and start caring about the outcome.
+          </p>
+          <p class="body-p">
+            I work best in environments where design and engineering think together
+            rather than hand off to each other. Not because I can do both, but
+            because I've seen what happens when they don't.
+          </p>
+
+          <div class="skills-wrap">
+            <div class="skills-grid">
+              <div class="skill-col">
+                <span class="skill-lbl">Design</span>
+                <ul class="skill-list">
+                  <li>UX Research</li>
+                  <li>Interaction Design</li>
+                  <li>Wireframing & Prototyping</li>
+                  <li>Design Systems</li>
+                  <li>Information Architecture</li>
+                  <li>Usability Testing</li>
+                  <li>Accessibility-aware design</li>
+                </ul>
+              </div>
+              <div class="skill-col">
+                <span class="skill-lbl">Engineering</span>
+                <ul class="skill-list">
+                  <li>HTML & CSS</li>
+                  <li>JavaScript</li>
+                  <li>React & Angular environments</li>
+                  <li>Figma → code handoff</li>
+                  <li>Git & GitHub</li>
+                  <li>Responsive design</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-rule">
+
+        <!-- Beyond work -->
+        <div>
+          <div class="body-label">Beyond the screen</div>
+          <h2 class="body-h">Design lives in the<br><em>details you notice.</em></h2>
+          <p class="body-p">
+            I think a lot about how people move through real spaces —
+            how a table is set, how a gathering unfolds, how small
+            decisions about light and order shape how people feel.
+            Most of my sharpest UX instincts came from watching people
+            navigate physical moments, not digital ones.
+          </p>
+
+          <div class="chaska-block">
+            <div class="chaska-text">
+              <span class="chaska-label">The Chaska Life</span>
+              <p class="chaska-h">An independent practice in experience design for real-world gatherings.</p>
+              <p class="chaska-p">
+                Indian-inspired tablescapes, curated dinner experiences, and the
+                considered placement of every detail. The same thinking that goes
+                into a good user flow goes into a good evening — clarity,
+                intention, and knowing when to get out of the way.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-rule">
+
+        <!-- Where I'm headed -->
+        <div>
+          <div class="body-label">Where I'm headed</div>
+          <h2 class="body-h">Looking for work where<br><em>both things matter.</em></h2>
+          <p class="body-p">
+            I'm actively looking for UX generalist roles at companies where
+            design and engineering genuinely respect each other. I'm
+            interested in teams that care about the craft — where a
+            well-considered interaction is worth the conversation, and
+            shipping something solid matters as much as shipping it fast.
+          </p>
+          <p class="body-p">
+            If that sounds like your team, I'd love to talk.
+          </p>
+
+          <div class="about-links-wrap">
+            <a href="assets/parul-tater-resume.pdf"
+               target="_blank" class="about-link about-link-primary">
+              Download resume
+              <svg viewBox="0 0 13 13"><path d="M2 7h9M7.5 3l4 4-4 4"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/parul-tater/"
+               target="_blank" rel="noopener"
+               class="about-link about-link-secondary">
+              LinkedIn
+              <svg viewBox="0 0 13 13"><path d="M2 7h9M7.5 3l4 4-4 4"/></svg>
+            </a>
+            <a href="mailto:parulj12@gmail.com"
+               class="about-link about-link-secondary">
+              parulj12@gmail.com
+              <svg viewBox="0 0 13 13"><path d="M2 7h9M7.5 3l4 4-4 4"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="ft-orn">✦ · ✦</div>
+  <h2 class="ft-h">Like what you see?<br>Let's chat.</h2>
+  <p class="ft-sub">Open to full-time UX design roles and select freelance projects.</p>
+  <div class="ft-links">
+    <a href="mailto:parulj12@gmail.com" class="flink">parulj12@gmail.com</a>
+    <a href="https://www.linkedin.com/in/parul-tater/" target="_blank" class="flink">LinkedIn</a>
+    <a href="assets/parul-tater-resume.pdf" target="_blank" class="flink">Resume PDF</a>
+  </div>
+  <div class="ft-legal">All rights reserved · Parul Tater © 2025</div>
+</footer>
+
+</body>
+</html>
