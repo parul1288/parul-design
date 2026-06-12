@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Polls — Parul Tater</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --bg:        #FFFFFF;
+  --bg-card:   #F4F3F1;
+  --bg-warm:   #FAF8F5;
+  --bg-dark:   #1A1410;
+  --t1:        #1A1410;
+  --t2:        #3D2E24;
+  --t3:        #5C4030;
+  --on-dark:   #F5ECD7;
+  --on-dark2:  #C4A882;
+  --tc:        #C4704B;
+  --sienna:    #8B4513;
+  --clay:      #E8A882;
+  --gold:      #D4A847;
+  --leaf:      #4A6741;
+  --leaf-light:#E8EFE6;
+  --wa-green:  #1a7c4a;
+  --wa-light:  #e8f5ee;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fb: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--fb); background: var(--bg); color: var(--t2); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 40px; }
+
+/* ── NAV ────────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  padding: 18px 0;
+}
+.nav-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--fd); font-size: 19px; font-weight: 400; color: var(--t1); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--t3); letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--tc); }
+
+/* ── HERO ───────────────────────────────────────────────────── */
+.hero { padding: 80px 0 64px; position: relative; overflow: hidden; }
+.hero::before {
+  content: ''; position: absolute; left: 0; top: 60px;
+  width: 3px; height: 280px;
+  background: linear-gradient(to bottom, var(--wa-green), transparent);
+}
+.hero-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+}
+.hero-text { padding-bottom: 40px; }
+.hero-eye {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--tc);
+  margin-bottom: 20px; display: block;
+}
+.hero-h1 {
+  font-family: var(--fd); font-size: clamp(38px, 5vw, 60px);
+  font-weight: 300; color: var(--t1); line-height: 1.05; margin-bottom: 20px;
+}
+.hero-h1 em { font-style: italic; color: var(--sienna); font-weight: 400; }
+.hero-sub {
+  font-size: 16px; color: var(--t2); line-height: 1.72;
+  max-width: 420px; margin-bottom: 36px;
+}
+.hero-note {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--wa-light); border: 0.5px solid rgba(26,124,74,0.25);
+  border-radius: 4px; padding: 10px 16px;
+  font-size: 12px; color: var(--wa-green); font-weight: 500;
+}
+.hero-phone {
+  display: flex; justify-content: center; align-items: flex-end;
+}
+.hero-phone img {
+  width: 100%; max-width: 260px;
+  border-radius: 32px;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.10),
+    0 24px 48px rgba(0,0,0,0.08);
+}
+
+/* ── CONTEXT STRIP ──────────────────────────────────────────── */
+.context-strip {
+  border-top: 0.5px solid rgba(0,0,0,0.08);
+  border-bottom: 0.5px solid rgba(0,0,0,0.08);
+  padding: 36px 0; background: var(--bg-warm);
+}
+.context-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 24px; }
+.ctx-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--tc);
+  margin-bottom: 6px; display: block;
+}
+.ctx-value { font-size: 13px; color: var(--t1); line-height: 1.5; }
+
+/* ── SECTIONS ───────────────────────────────────────────────── */
+.cs-section { padding: 88px 0; }
+.section-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--tc);
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.section-label::before {
+  content: ''; display: block; width: 28px; height: 1px;
+  background: var(--tc); flex-shrink: 0;
+}
+.cs-h2 {
+  font-family: var(--fd); font-size: clamp(28px,3.5vw,42px);
+  font-weight: 400; color: var(--t1); line-height: 1.1; margin-bottom: 20px;
+}
+.cs-h2 em { font-style: italic; color: var(--sienna); }
+.cs-lead {
+  font-size: 16px; color: var(--t2); line-height: 1.75;
+  max-width: 640px; margin-bottom: 48px;
+}
+.section-rule { border: none; border-top: 0.5px solid rgba(0,0,0,0.07); }
+.orn {
+  text-align: center; padding: 12px 0;
+  font-family: var(--fd); font-size: 15px;
+  color: var(--gold); letter-spacing: 0.45em; opacity: 0.5;
+}
+
+/* ── INSIGHT CARDS ──────────────────────────────────────────── */
+.insight-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-top: 40px; }
+.insight-card {
+  background: var(--bg-warm); border: 0.5px solid rgba(0,0,0,0.07);
+  border-radius: 10px; padding: 20px 18px;
+}
+.insight-num {
+  font-family: var(--fd); font-size: 28px; font-weight: 300;
+  color: var(--wa-green); opacity: 0.5; line-height: 1;
+  margin-bottom: 10px; display: block;
+}
+.insight-text { font-size: 13px; color: var(--t1); line-height: 1.6; font-weight: 500; margin-bottom: 6px; }
+.insight-impl { font-size: 12px; color: var(--t3); line-height: 1.6; }
+
+/* ── PERSONA ────────────────────────────────────────────────── */
+.persona-wrap {
+  margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; align-items: start;
+}
+.persona-img-wrap {
+  border-radius: 12px; overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.08);
+  cursor: zoom-in;
+}
+.persona-img-wrap img { width: 100%; display: block; transition: transform 0.3s ease; }
+.persona-img-wrap:hover img { transform: scale(1.02); }
+.persona-text { padding-top: 8px; }
+.persona-role {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--wa-green);
+  margin-bottom: 10px; display: block;
+}
+.persona-name {
+  font-family: var(--fd); font-size: 22px; font-weight: 400;
+  color: var(--t1); margin-bottom: 12px;
+}
+.persona-body { font-size: 14px; color: var(--t2); line-height: 1.72; }
+.persona-note {
+  margin-top: 16px; font-size: 13px; color: var(--t3);
+  font-style: italic; line-height: 1.65;
+  padding-left: 14px; border-left: 2px solid rgba(26,124,74,0.3);
+}
+
+/* ── PROBLEM STATEMENT ──────────────────────────────────────── */
+.problem-block {
+  border-left: 2px solid var(--wa-green); padding: 24px 32px;
+  background: var(--wa-light); border-radius: 0 10px 10px 0;
+  margin: 40px 0; max-width: 680px;
+}
+.problem-block p {
+  font-family: var(--fd); font-size: clamp(18px,2.2vw,24px);
+  font-weight: 400; color: var(--t1); line-height: 1.45; font-style: italic;
+}
+
+/* ── JOB STORIES ────────────────────────────────────────────── */
+.job-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+.job-card {
+  border: 0.5px solid rgba(26,124,74,0.2); border-radius: 10px;
+  padding: 22px 24px; background: var(--bg);
+}
+.job-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--wa-green); margin-bottom: 10px; display: block;
+}
+.job-text { font-family: var(--fd); font-size: 16px; font-weight: 400; color: var(--t1); line-height: 1.5; }
+.job-text strong { font-weight: 500; font-style: italic; }
+
+/* ── DESIGN PRINCIPLES ──────────────────────────────────────── */
+.principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; }
+.principle-card {
+  background: var(--bg-warm); border: 0.5px solid rgba(0,0,0,0.07);
+  border-radius: 10px; padding: 20px 22px;
+}
+.principle-title { font-size: 13px; font-weight: 500; color: var(--t1); margin-bottom: 6px; }
+.principle-body { font-size: 13px; color: var(--t3); line-height: 1.6; }
+
+/* ── SKETCH ─────────────────────────────────────────────────── */
+.sketch-wrap {
+  margin-top: 32px; border-radius: 12px; overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.08); cursor: zoom-in;
+}
+.sketch-wrap img { width: 100%; display: block; transition: transform 0.3s ease; }
+.sketch-wrap:hover img { transform: scale(1.01); }
+.sketch-caption {
+  font-size: 12px; color: var(--t3); margin-top: 10px;
+  font-style: italic; line-height: 1.5;
+}
+
+/* ── INTERACTION DECISIONS ──────────────────────────────────── */
+.decisions-list { margin-top: 36px; display: flex; flex-direction: column; gap: 0; }
+.decision-item {
+  display: grid; grid-template-columns: 240px 1fr;
+  gap: 32px; padding: 24px 0;
+  border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  align-items: start;
+}
+.decision-item:first-child { border-top: 0.5px solid rgba(0,0,0,0.06); }
+.decision-title { font-size: 14px; font-weight: 500; color: var(--t1); line-height: 1.5; }
+.decision-rationale { font-size: 14px; color: var(--t2); line-height: 1.72; }
+
+/* ── FLOW SCREENS (Deliver) ─────────────────────────────────── */
+.flow-block { margin-top: 56px; }
+.flow-block:first-child { margin-top: 0; }
+.flow-header { margin-bottom: 20px; }
+.flow-name {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--t3); margin-bottom: 6px; display: block;
+}
+.flow-desc { font-size: 14px; color: var(--t2); line-height: 1.7; max-width: 560px; }
+.flow-screens {
+  background: var(--bg-card); border-radius: 16px; padding: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+.flow-screen { display: flex; flex-direction: column; align-items: center; }
+.screen-img-wrap {
+  background: var(--bg);
+  border-radius: 20px; overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.06);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  aspect-ratio: 9/19.5;
+  display: block; cursor: zoom-in;
+  width: 100%;
+}
+.screen-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.3s ease;
+}
+.screen-img-wrap:hover img { transform: scale(1.02); }
+.screen-label {
+  font-size: 11px; color: var(--t3); margin-top: 10px;
+  text-align: center; line-height: 1.4;
+}
+
+/* ── PROTOTYPE CTA ──────────────────────────────────────────── */
+.proto-cta {
+  margin-top: 48px; padding: 32px 36px; background: var(--wa-light);
+  border: 0.5px solid rgba(26,124,74,0.2);
+  border-radius: 12px; display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 20px;
+}
+.proto-cta-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--wa-green); margin-bottom: 6px; display: block;
+}
+.proto-cta-h { font-family: var(--fd); font-size: 20px; color: var(--t1); font-weight: 400; }
+.btn-proto {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--wa-green); color: #fff;
+  padding: 12px 24px; border-radius: 4px;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.04em;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.btn-proto:hover { background: var(--t1); }
+.btn-proto svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* ── TESTING ────────────────────────────────────────────────── */
+.testing-method {
+  margin-bottom: 40px; padding: 20px 24px;
+  background: var(--bg-warm); border-radius: 10px;
+  border: 0.5px solid rgba(0,0,0,0.07);
+  font-size: 14px; color: var(--t2); line-height: 1.72;
+}
+.testing-method strong { color: var(--t1); font-weight: 500; }
+.findings-list { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+.finding-item {
+  padding: 28px 0; border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  display: grid; grid-template-columns: 240px 1fr; gap: 32px; align-items: start;
+}
+.finding-item:first-child { border-top: 0.5px solid rgba(0,0,0,0.06); }
+.finding-title { font-size: 14px; font-weight: 500; color: var(--t1); line-height: 1.5; }
+.finding-body { font-size: 14px; color: var(--t2); line-height: 1.72; }
+.finding-change {
+  margin-top: 10px; font-size: 13px; color: var(--wa-green);
+  display: flex; gap: 6px; align-items: flex-start; line-height: 1.6;
+}
+.finding-change::before { content: '→'; flex-shrink: 0; font-weight: 500; }
+
+/* ── REFLECTION ─────────────────────────────────────────────── */
+.reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
+.reflection-col-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--tc); margin-bottom: 16px; display: block;
+  padding-bottom: 10px; border-bottom: 0.5px solid rgba(196,112,75,0.2);
+}
+.reflection-item {
+  font-size: 14px; color: var(--t2); line-height: 1.72;
+  padding: 14px 0; border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.reflection-item::before {
+  content: '—'; color: var(--tc); flex-shrink: 0;
+  font-family: var(--fd); font-size: 16px; line-height: 1.72;
+}
+
+/* ── POST-LAUNCH NOTE ───────────────────────────────────────── */
+.postlaunch-block {
+  margin-top: 48px; padding: 32px 36px;
+  background: var(--bg-dark); border-radius: 12px;
+}
+.postlaunch-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 12px; display: block;
+}
+.postlaunch-text {
+  font-family: var(--fd); font-size: clamp(17px,2vw,21px);
+  font-weight: 400; color: var(--on-dark); line-height: 1.55;
+}
+
+/* ── NEXT STEPS ─────────────────────────────────────────────── */
+.nextsteps-list { margin-top: 32px; display: flex; flex-direction: column; gap: 0; }
+.nextstep {
+  padding: 16px 0; border-bottom: 0.5px solid rgba(0,0,0,0.06);
+  font-size: 14px; color: var(--t2); line-height: 1.72;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.nextstep:first-child { border-top: 0.5px solid rgba(0,0,0,0.06); }
+.nextstep::before { content: '↗'; color: var(--tc); flex-shrink: 0; font-size: 13px; margin-top: 2px; }
+
+/* ── CASE NAV ───────────────────────────────────────────────── */
+.case-nav {
+  border-top: 0.5px solid rgba(0,0,0,0.08); padding: 48px 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.case-nav-link { display: flex; flex-direction: column; gap: 4px; }
+.case-nav-dir {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--t3);
+}
+.case-nav-title { font-family: var(--fd); font-size: 18px; color: var(--t1); transition: color 0.2s; }
+.case-nav-link:hover .case-nav-title { color: var(--sienna); }
+
+/* ── FOOTER ─────────────────────────────────────────────────── */
+footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
+.ft-orn { font-family: var(--fd); font-size: 16px; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 20px; }
+.ft-h {
+  font-family: var(--fd); font-size: clamp(22px,3vw,32px);
+  color: var(--on-dark); font-weight: 400; line-height: 1.2; margin-bottom: 8px;
+}
+.ft-sub { font-size: 14px; color: var(--on-dark2); margin-bottom: 28px; }
+.ft-links { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-bottom: 32px; }
+.flink {
+  font-size: 13px; color: var(--on-dark); letter-spacing: 0.04em;
+  border-bottom: 0.5px solid rgba(245,236,215,0.3); padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.flink:hover { color: var(--gold); border-color: var(--gold); }
+.ft-legal { font-size: 11px; color: var(--on-dark2); opacity: 0.6; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .wrap { padding: 0 24px; }
+  .nav-inner { padding: 0 24px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-phone { order: -1; }
+  .hero-phone img { max-width: 220px; }
+  .context-grid { grid-template-columns: repeat(2,1fr); gap: 20px; }
+  .insight-grid { grid-template-columns: 1fr 1fr; }
+  .persona-wrap { grid-template-columns: 1fr; }
+  .job-grid { grid-template-columns: 1fr; }
+  .principles-grid { grid-template-columns: 1fr; }
+  .decision-item { grid-template-columns: 1fr; gap: 8px; }
+  .flow-screens { grid-template-columns: repeat(2, 1fr); }
+  .finding-item { grid-template-columns: 1fr; gap: 8px; }
+  .reflection-grid { grid-template-columns: 1fr; gap: 24px; }
+  .case-nav { flex-direction: column; gap: 24px; text-align: center; }
+  .proto-cta { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .insight-grid { grid-template-columns: 1fr; }
+  .flow-screens { grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">PT</a>
+    <ul class="nav-links">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#explorations">Explorations</a></li>
+      <li><a href="index.html#field-notes">Field Notes</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <span class="hero-eye">Feature Concept · Mobile · 2023</span>
+        <h1 class="hero-h1">WhatsApp<br><em>Polls</em></h1>
+        <p class="hero-sub">
+          Helping groups reach decisions faster with lightweight polls
+          that live inside the conversation — not alongside it.
+        </p>
+        <div class="hero-note">
+          Designed and usability-tested before WhatsApp shipped their own polls feature.
+        </div>
+      </div>
+      <div class="hero-phone">
+        <img src="assets/images/whatsapp-polls/hero.png"
+             alt="WhatsApp group chat showing a poll with voting options inline">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTEXT STRIP ──────────────────────────────────────────── -->
+<div class="context-strip">
+  <div class="wrap">
+    <div class="context-grid">
+      <div>
+        <span class="ctx-label">Role</span>
+        <span class="ctx-value">UX Designer — Research, Ideation, Prototyping, Testing</span>
+      </div>
+      <div>
+        <span class="ctx-label">Timeline</span>
+        <span class="ctx-value">~3 weeks</span>
+      </div>
+      <div>
+        <span class="ctx-label">Team</span>
+        <span class="ctx-value">Solo</span>
+      </div>
+      <div>
+        <span class="ctx-label">Tools</span>
+        <span class="ctx-value">Adobe XD</span>
+      </div>
+      <div>
+        <span class="ctx-label">Type</span>
+        <span class="ctx-value">Personal project — feature concept</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<!-- ── 01 DISCOVER ───────────────────────────────────────────── -->
+<section class="cs-section" id="discover">
+  <div class="wrap">
+    <div class="section-label"><span>01 — Discover</span></div>
+    <h2 class="cs-h2">Where group planning<br><em>breaks down.</em></h2>
+    <p class="cs-lead">
+      I surveyed people from my personal network — friends and family who use WhatsApp groups regularly —
+      to understand how they make decisions together and where the process slows down. I focused on
+      the moments that create the most friction: finding options, comparing responses, and closing on an answer.
+    </p>
+
+    <div class="insight-grid">
+      <div class="insight-card">
+        <span class="insight-num">01</span>
+        <p class="insight-text">Planning conversations fragment quickly in active chats</p>
+        <p class="insight-impl">Options and participation need to stay easy to revisit without scrolling.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-num">02</span>
+        <p class="insight-text">People respond in different formats, making options hard to compare</p>
+        <p class="insight-impl">Responses should be structured into a clear, comparable format.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-num">03</span>
+        <p class="insight-text">Groups fall into repeated confirmation loops before deciding</p>
+        <p class="insight-impl">Results should be visible and decision closure should feel obvious.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-num">04</span>
+        <p class="insight-text">Planners do the most manual work — summarizing, nudging, tracking</p>
+        <p class="insight-impl">The feature should reduce coordination effort with lightweight status and results.</p>
+      </div>
+      <div class="insight-card">
+        <span class="insight-num">05</span>
+        <p class="insight-text">Users want to discuss and vote without losing context</p>
+        <p class="insight-impl">Voting should feel native to chat and support conversation alongside it.</p>
+      </div>
+    </div>
+
+    <div class="persona-wrap">
+      <a href="assets/images/whatsapp-polls/persona-planner.png"
+         class="persona-img-wrap glightbox"
+         data-description="Eva Collins — The Planner persona. Software engineer who organizes events for large social groups and finds the coordination process exhausting.">
+        <img src="assets/images/whatsapp-polls/persona-planner.png"
+             alt="Eva Collins — The Planner persona card">
+      </a>
+      <div class="persona-text">
+        <span class="persona-role">Primary persona — The Planner</span>
+        <p class="persona-name">Eva Collins</p>
+        <p class="persona-body">
+          Eva plans events for large friend groups and finds the coordination process exhausting —
+          not because she lacks ideas, but because getting everyone to respond and agree takes
+          more effort than the plan itself. She ends up manually tracking replies,
+          nudging quiet members, and re-summarizing options that got buried in the thread.
+        </p>
+        <p class="persona-note">
+          "We do girls' day outs or weekend getaways and with a large group, site plans and
+          availability often changes — someone needs to be on top of it."
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ── 02 DEFINE ─────────────────────────────────────────────── -->
+<section class="cs-section" id="define">
+  <div class="wrap">
+    <div class="section-label"><span>02 — Define</span></div>
+    <h2 class="cs-h2">The real problem<br>is <em>the stream.</em></h2>
+
+    <div class="problem-block">
+      <p>
+        Planning decisions in WhatsApp group chats are slow and error-prone because options
+        and replies get buried in the conversation. Without a structured way to compare choices
+        and confirm a final outcome, planners end up manually tracking responses and repeatedly
+        re-aligning the group.
+      </p>
+    </div>
+
+    <p style="font-size:15px; color:var(--t2); line-height:1.75; max-width:640px; margin-bottom:32px;">
+      Two job stories anchored the design — one for the person running the plan, one for the
+      person joining it late. Both needed to feel resolved without extra steps.
+    </p>
+
+    <div class="job-grid">
+      <div class="job-card">
+        <span class="job-label">The Planner</span>
+        <p class="job-text">
+          <strong>When I'm organizing an event in a WhatsApp group,</strong> I want to quickly
+          collect everyone's availability and preferences, so that I can finalize the plan
+          without manually tracking replies.
+        </p>
+      </div>
+      <div class="job-card">
+        <span class="job-label">The Participant</span>
+        <p class="job-text">
+          <strong>When I'm joining a group plan late,</strong> I want to see the options clearly
+          and vote in seconds, so that I can respond confidently without scrolling through messages.
+        </p>
+      </div>
+    </div>
+
+    <p style="font-size:15px; color:var(--t2); line-height:1.75; max-width:640px; margin: 40px 0 24px;">
+      These stories translated into four design principles that every decision had to hold up against:
+    </p>
+
+    <div class="principles-grid">
+      <div class="principle-card">
+        <p class="principle-title">Keep it native to chat</p>
+        <p class="principle-body">Polls should feel like part of the conversation, not a separate tool or workflow.</p>
+      </div>
+      <div class="principle-card">
+        <p class="principle-title">Make choices scannable</p>
+        <p class="principle-body">Options must be easy to compare at a glance without reading multiple messages.</p>
+      </div>
+      <div class="principle-card">
+        <p class="principle-title">Support async participation</p>
+        <p class="principle-body">Users joining late should still understand context and respond quickly.</p>
+      </div>
+      <div class="principle-card">
+        <p class="principle-title">Show decision closure</p>
+        <p class="principle-body">The group should clearly know when a decision has been made and what the outcome is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ── 03 DESIGN ──────────────────────────────────────────────── -->
+<section class="cs-section" id="design">
+  <div class="wrap">
+    <div class="section-label"><span>03 — Design</span></div>
+    <h2 class="cs-h2">Fitting polls into<br><em>the conversation.</em></h2>
+    <p class="cs-lead">
+      The central challenge wasn't the poll itself — it was making it feel like it belonged in WhatsApp.
+      I explored multiple entry points and layouts to find interactions that felt immediately familiar
+      rather than bolted on.
+    </p>
+
+    <a href="assets/images/whatsapp-polls/sketches.png"
+       class="sketch-wrap glightbox"
+       data-description="Exploration sketches — multiple entry points and layouts explored across paper prototypes before moving to hi-fi">
+      <img src="assets/images/whatsapp-polls/sketches.png"
+           alt="Paper sketch exploration — multiple entry points and poll layouts">
+    </a>
+    <p class="sketch-caption">
+      Sketching revealed where the entry point mattered most — menu-based vs. shortcut access,
+      inline vs. separate poll view. Quick paper-prototype testing showed where users hesitated
+      before a single direction was clear.
+    </p>
+
+    <h3 style="font-family:var(--fd); font-size:22px; font-weight:400; color:var(--t1); margin: 56px 0 4px;">
+      Key interaction decisions
+    </h3>
+    <p style="font-size:15px; color:var(--t2); line-height:1.75; max-width:640px;">
+      Each decision below came from a specific research finding or usability observation — not a default.
+    </p>
+
+    <div class="decisions-list">
+      <div class="decision-item">
+        <p class="decision-title">Keep voting inside the chat</p>
+        <p class="decision-rationale">
+          Users wanted to discuss and vote without switching screens. Moving to a separate voting
+          view broke the conversational context they needed to make a confident choice.
+          The poll lives in the thread — always.
+        </p>
+      </div>
+      <div class="decision-item">
+        <p class="decision-title">Provide multiple entry points</p>
+        <p class="decision-rationale">
+          Polls are accessible from the group actions menu and from a persistent bottom nav tab.
+          Research showed planners think of polls as a group tool, not a message type —
+          so both access patterns needed to work.
+        </p>
+      </div>
+      <div class="decision-item">
+        <p class="decision-title">Show participation status</p>
+        <p class="decision-rationale">
+          Members can see live vote counts and who has voted. This directly reduces the repeated
+          confirmation loops identified in research — the group can see momentum without the
+          planner having to nudge anyone.
+        </p>
+      </div>
+      <div class="decision-item">
+        <p class="decision-title">Allow edits without confusion</p>
+        <p class="decision-rationale">
+          Plans change. Updating options or a deadline keeps previous responses intact and
+          understandable — rather than forcing a restart that erases existing participation.
+        </p>
+      </div>
+      <div class="decision-item">
+        <p class="decision-title">Create a clear closure moment</p>
+        <p class="decision-rationale">
+          When a poll ends, the result surfaces in the chat with a winner highlighted and a
+          "Poll Completed" marker. The group knows a decision has been made without anyone
+          having to announce it.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ── 04 DELIVER ────────────────────────────────────────────── -->
+<section class="cs-section" id="deliver">
+  <div class="wrap">
+    <div class="section-label"><span>04 — Deliver</span></div>
+    <h2 class="cs-h2">Lightweight polls,<br><em>inside the chat.</em></h2>
+    <p class="cs-lead">
+      The final design introduces polls that live entirely within the group conversation —
+      creating options, voting, and seeing the final decision all happen without leaving the thread.
+    </p>
+
+    <!-- Create Flow -->
+    <div class="flow-block">
+      <div class="flow-header">
+        <span class="flow-name">Create polls</span>
+        <p class="flow-desc">
+          A planner structures options in one place instead of across multiple messages.
+          Poll creation launches from familiar group actions and returns the group to chat
+          the moment it's done.
+        </p>
+      </div>
+      <div class="flow-screens">
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/create-01.png"
+             class="screen-img-wrap glightbox" data-gallery="create"
+             data-description="Group chat — 'I'll set up a poll to decide a place.' The moment the problem is recognised and the planner acts.">
+            <img src="assets/images/whatsapp-polls/create-01.png"
+                 alt="Group chat — planner decides to set up a poll">
+          </a>
+          <p class="screen-label">Problem recognised in chat</p>
+        </div>
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/create-02.png"
+             class="screen-img-wrap glightbox" data-gallery="create"
+             data-description="Create Poll — filled with title 'Amy's Bday Lunch', question, and three options. Done button active.">
+            <img src="assets/images/whatsapp-polls/create-02.png"
+                 alt="Create Poll form — filled and ready">
+          </a>
+          <p class="screen-label">Poll structured in one place</p>
+        </div>
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/create-03.png"
+             class="screen-img-wrap glightbox" data-gallery="create"
+             data-description="Poll appears inline in group chat — 'Ava created a new poll · Amy's Bday Lunch' with options and live vote counts visible immediately.">
+            <img src="assets/images/whatsapp-polls/create-03.png"
+                 alt="Poll appears inline in group chat">
+          </a>
+          <p class="screen-label">Poll appears inline — back in chat</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vote Flow -->
+    <div class="flow-block" style="margin-top:48px;">
+      <div class="flow-header">
+        <span class="flow-name">Vote</span>
+        <p class="flow-desc">
+          Participants vote directly within the conversation. Options are scannable at a glance,
+          live counts show momentum, and voting never requires leaving the thread.
+        </p>
+      </div>
+      <div class="flow-screens">
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/vote-01.png"
+             class="screen-img-wrap glightbox" data-gallery="vote"
+             data-description="Poll card in chat — options with live vote counts and participant avatars. Voting is available immediately without switching context.">
+            <img src="assets/images/whatsapp-polls/vote-01.png"
+                 alt="Poll in chat — unvoted, options visible with live counts">
+          </a>
+          <p class="screen-label">Poll visible in chat, ready to vote</p>
+        </div>
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/vote-02.png"
+             class="screen-img-wrap glightbox" data-gallery="vote"
+             data-description="Vote cast — Olive Garden selected and highlighted. Updated counts visible. Discussion continues in the same thread.">
+            <img src="assets/images/whatsapp-polls/vote-02.png"
+                 alt="Vote cast — Olive Garden selected, counts updated">
+          </a>
+          <p class="screen-label">Vote cast — still in the conversation</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manage Flow -->
+    <div class="flow-block" style="margin-top:48px;">
+      <div class="flow-header">
+        <span class="flow-name">Manage and close</span>
+        <p class="flow-desc">
+          Polls remain editable after creation. The planner can send reminders, adjust options,
+          or end the poll manually. When it closes, the result surfaces in the chat — so the
+          group knows the decision without an announcement.
+        </p>
+      </div>
+      <div class="flow-screens">
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/manage-01.png"
+             class="screen-img-wrap glightbox" data-gallery="manage"
+             data-description="Polls list — accessible from the bottom nav tab. Active and expired polls listed by recency with creator shown. Quick access to create a new poll.">
+            <img src="assets/images/whatsapp-polls/manage-01.png"
+                 alt="Polls list — active and expired polls with creator info">
+          </a>
+          <p class="screen-label">Polls list — accessible from nav</p>
+        </div>
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/manage-02.png"
+             class="screen-img-wrap glightbox" data-gallery="manage"
+             data-description="Edit Poll — planner can update options, send a reminder to non-voters, end the poll, or delete it. Previous votes remain intact after edits.">
+            <img src="assets/images/whatsapp-polls/manage-02.png"
+                 alt="Edit Poll screen — send reminder, end poll, delete poll">
+          </a>
+          <p class="screen-label">Planner controls — edit, remind, close</p>
+        </div>
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/manage-03.png"
+             class="screen-img-wrap glightbox" data-gallery="manage"
+             data-description="Poll Completed in chat — 'Poll Completed · Amy's Bday Lunch' banner with Pizzeria highlighted as winner. The closure moment surfaces in the thread.">
+            <img src="assets/images/whatsapp-polls/manage-03.png"
+                 alt="Poll completed in group chat — winner highlighted">
+          </a>
+          <p class="screen-label">Decision surfaces in the thread</p>
+        </div>
+        <div class="flow-screen">
+          <a href="assets/images/whatsapp-polls/manage-04.png"
+             class="screen-img-wrap glightbox" data-gallery="manage"
+             data-description="Poll Summary — final results with vote counts and creator details. Available for 24 hours after the poll ends.">
+            <img src="assets/images/whatsapp-polls/manage-04.png"
+                 alt="Poll Summary — final results and creator info">
+          </a>
+          <p class="screen-label">Poll Summary — permanent record</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prototype CTA -->
+    <div class="proto-cta">
+      <div>
+        <span class="proto-cta-label">See it in action</span>
+        <p class="proto-cta-h">Explore the clickable prototype.</p>
+      </div>
+      <a href="https://xd.adobe.com/embed/58078d9b-5a50-4d28-5749-2a635298934d-2e36/" target="_blank" rel="noopener" class="btn-proto">
+        View prototype
+        <svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ── 05 TESTING ────────────────────────────────────────────── -->
+<section class="cs-section" id="testing">
+  <div class="wrap">
+    <div class="section-label"><span>05 — Testing</span></div>
+    <h2 class="cs-h2">What the sessions<br><em>revealed.</em></h2>
+    <p class="cs-lead">
+      This is the only project in this portfolio with live usability testing. I conducted remote
+      sessions over Zoom using a clickable prototype, evaluating three things: discoverability
+      of poll creation, clarity of the voting interaction, and whether the experience
+      felt consistent with how WhatsApp already works.
+    </p>
+
+    <div class="testing-method">
+      <strong>Method:</strong> Remote moderated usability sessions · Zoom · Personal network
+      (friends and family who use WhatsApp groups regularly) · Clickable Adobe XD prototype ·
+      Tasks included creating a poll, casting a vote, and finding an existing poll result.
+    </div>
+
+    <div class="findings-list">
+      <div class="finding-item">
+        <p class="finding-title">Familiar patterns worked immediately</p>
+        <div class="finding-body">
+          <p>
+            Users described the design as consistent with WhatsApp and found poll creation
+            intuitively within the group actions. No one needed prompting to find the entry point.
+            Several also expected a quicker shortcut — which aligned with the bottom nav tab decision
+            already in the design.
+          </p>
+        </div>
+      </div>
+      <div class="finding-item">
+        <p class="finding-title">The unread dot indicator was immediately understood</p>
+        <div class="finding-body">
+          <p>
+            The dot indicator on active polls was recognised without explanation — because it
+            matched WhatsApp's existing unread status behaviour. Leveraging a familiar pattern
+            meant zero learning curve for that interaction.
+          </p>
+        </div>
+      </div>
+      <div class="finding-item">
+        <p class="finding-title">Voting needed to happen inline — without switching screens</p>
+        <div class="finding-body">
+          <p>
+            Most participants wanted to vote immediately after seeing the poll in chat. An earlier
+            iteration required tapping into a separate view to cast a vote — users hesitated
+            or abandoned the step.
+          </p>
+          <p class="finding-change">
+            Poll options were surfaced directly inside the chat so members could vote and continue
+            the discussion in the same thread. This was the most significant design change
+            driven by testing.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ── 06 REFLECTION ─────────────────────────────────────────── -->
+<section class="cs-section" id="reflection">
+  <div class="wrap">
+    <div class="section-label"><span>06 — Reflection</span></div>
+    <h2 class="cs-h2">The problem wasn't<br><em>collecting votes.</em></h2>
+    <p class="cs-lead">
+      Designing polls for WhatsApp highlighted that group decisions don't fail because people
+      lack opinions — they fail because conversation and decision-making happen in the same stream.
+      The most meaningful improvement wasn't the poll itself, it was creating a clear moment of
+      closure that the whole group could see.
+    </p>
+
+    <div class="reflection-grid">
+      <div>
+        <span class="reflection-col-label">What worked</span>
+        <div class="reflection-item">Keeping voting inline — inside the chat rather than a separate screen — was the single most important decision. Testing confirmed it.</div>
+        <div class="reflection-item">The "Poll Completed" closure moment in the thread solved the re-alignment problem directly. No planner announcement needed.</div>
+        <div class="reflection-item">Leaning into existing WhatsApp patterns (unread dots, group actions menu) meant users felt oriented from the first interaction.</div>
+      </div>
+      <div>
+        <span class="reflection-col-label">What I'd push further</span>
+        <div class="reflection-item">Testing with larger, more diverse group types — work, community, event groups — would stress-test whether the planner/participant model holds.</div>
+        <div class="reflection-item">Richer poll options (date pickers, locations, image attachments) would cover more real planning scenarios without adding complexity.</div>
+        <div class="reflection-item">Contextual actions after results — create a calendar event, share a location — would close the loop the poll opens.</div>
+      </div>
+    </div>
+
+    <div class="postlaunch-block">
+      <span class="postlaunch-label">Post-launch note</span>
+      <p class="postlaunch-text">
+        WhatsApp shipped polls roughly a year after this project. The core interaction —
+        structured voting inside the conversation with visible participation — maps closely
+        to what this exploration arrived at independently. Same constraints, similar answers.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CASE NAV ───────────────────────────────────────────────── -->
+<div class="wrap">
+  <div class="case-nav">
+    <a href="plant-care.html" class="case-nav-link">
+      <span class="case-nav-dir">← Previous</span>
+      <span class="case-nav-title">Plant Care Companion</span>
+    </a>
+    <div class="orn">✦ · ✦</div>
+    <div></div>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────── -->
+<footer>
+  <div class="ft-orn">✦ · ✦</div>
+  <h2 class="ft-h">Like what you see?<br>Let's chat.</h2>
+  <p class="ft-sub">Open to full-time UX design roles and select freelance projects.</p>
+  <div class="ft-links">
+    <a href="mailto:parulj12@gmail.com" class="flink">parulj12@gmail.com</a>
+    <a href="https://linkedin.com/in/parul-tater" target="_blank" class="flink">LinkedIn</a>
+    <a href="assets/parul-tater-resume.pdf" class="flink">Resume PDF</a>
+  </div>
+  <div class="ft-legal">All rights reserved · Parul Tater © 2025</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  GLightbox({ selector: '.glightbox', touchNavigation: true, loop: false });
+</script>
+</body>
+</html>
