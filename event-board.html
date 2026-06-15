@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Board — Design Exploration | Parul Tater</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:        #FFFFFF;
+  --bg-card:   #F4F3F1;
+  --bg-dark:   #1A1410;
+  --t1:        #1A1410;
+  --t2:        #3D2E24;
+  --t3:        #5C4030;
+  --on-dark:   #F5ECD7;
+  --on-dark2:  #C4A882;
+  --tc:        #C4704B;
+  --sienna:    #8B4513;
+  --clay:      #E8A882;
+  --gold:      #D4A847;
+  --leaf:      #4A6741;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fb: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--fb); background: var(--bg); color: var(--t2); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 40px; }
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  padding: 18px 0;
+}
+.nav-inner {
+  max-width: 1000px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--fd); font-size: 19px; font-weight: 400; color: var(--t1); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--t3); letter-spacing: 0.04em;
+  transition: color 0.2s; position: relative; padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--tc); }
+.nav-links a.active { color: var(--t1); font-weight: 500; }
+.nav-links a.active::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--tc);
+}
+
+/* ── SHARED ──────────────────────────────────────────────── */
+.overline {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--tc); margin-bottom: 12px; display: block;
+}
+.btn-t {
+  font-size: 13px; color: var(--t1); border-bottom: 1px solid var(--t1);
+  padding-bottom: 1px; letter-spacing: 0.04em;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-t:hover { color: var(--tc); border-color: var(--tc); }
+
+/* ── EXPLORATION HERO ────────────────────────────────────── */
+.exp-hero { padding: 64px 0 56px; }
+.back-link {
+  display: inline-block; font-size: 12px; color: var(--t3);
+  letter-spacing: 0.04em; margin-bottom: 32px; transition: color 0.2s;
+}
+.back-link:hover { color: var(--tc); }
+.exp-hero-title {
+  font-family: var(--fd); font-size: clamp(40px, 6vw, 60px);
+  font-weight: 400; color: var(--t1); line-height: 1.05; margin: 4px 0 14px;
+}
+.exp-hero-meta {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--t3); margin-bottom: 24px;
+}
+.exp-hero-frame {
+  font-family: var(--fd); font-style: italic;
+  font-size: clamp(17px, 2vw, 20px); color: var(--sienna);
+  line-height: 1.6; max-width: 600px; font-weight: 400;
+}
+.hero-rule { border: none; border-top: 0.5px solid rgba(0,0,0,0.08); margin: 48px 0 0; }
+
+/* ── CASE CONTENT ────────────────────────────────────────── */
+.case-section { padding: 64px 0; }
+.case-body p {
+  font-size: 15px; color: var(--t2); line-height: 1.78;
+  max-width: 620px; margin-bottom: 20px;
+}
+.case-body p:last-child { margin-bottom: 0; }
+.case-h2 {
+  font-family: var(--fd); font-size: clamp(24px, 3vw, 32px);
+  font-weight: 400; color: var(--t1); line-height: 1.15; margin-bottom: 20px;
+}
+.case-h3 {
+  font-family: var(--fd); font-size: clamp(19px, 2.2vw, 23px);
+  font-weight: 400; color: var(--t1); line-height: 1.2; margin-bottom: 16px;
+}
+.decisions-intro { margin-bottom: 8px; }
+
+/* ── PHONE GALLERY (What it is) ──────────────────────────── */
+.phone-gallery {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+  margin-top: 40px; max-width: 620px;
+}
+.phone-card { text-align: center; }
+.phone-card a { display: block; }
+.phone-card img {
+  width: 100%; max-width: 220px; height: auto; margin: 0 auto;
+  filter: drop-shadow(0 10px 28px rgba(0,0,0,0.10));
+  transition: transform 0.3s ease;
+}
+.phone-card a:hover img { transform: translateY(-3px); }
+.phone-cap { font-size: 12px; color: var(--t3); margin-top: 16px; line-height: 1.5; }
+
+/* ── DECISION / TWO-COL BLOCKS ───────────────────────────── */
+.decision-block {
+  display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px;
+  align-items: center; padding: 48px 0;
+  border-top: 0.5px solid rgba(0,0,0,0.07);
+}
+.decision-block:first-of-type { border-top: none; padding-top: 24px; }
+.decision-num {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--tc); margin-bottom: 12px; font-weight: 500;
+}
+.decision-title {
+  font-family: var(--fd); font-size: clamp(21px, 2.6vw, 27px);
+  font-weight: 400; color: var(--t1); margin-bottom: 16px; line-height: 1.2;
+}
+.decision-img { text-align: center; }
+.decision-img a { display: block; }
+.decision-img img {
+  width: 100%; max-width: 250px; height: auto; margin: 0 auto;
+  filter: drop-shadow(0 12px 32px rgba(0,0,0,0.10));
+  transition: transform 0.3s ease;
+}
+.decision-img a:hover img { transform: translateY(-3px); }
+
+/* ── THE REAL TEST (note section) ────────────────────────── */
+.note-section { background: var(--bg-card); padding: 72px 0; }
+.note-section .case-body p { max-width: 660px; }
+.note-closer {
+  font-family: var(--fd); font-style: italic;
+  font-size: clamp(19px, 2.4vw, 24px); color: var(--sienna);
+  line-height: 1.5; margin-top: 28px !important;
+}
+
+/* ── CLOSE ───────────────────────────────────────────────── */
+.case-close { padding: 64px 0 96px; }
+.case-close .case-body p { font-size: 14px; color: var(--t3); max-width: 580px; }
+.close-links { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
+.ft-orn { font-family: var(--fd); font-size: 16px; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 20px; }
+.ft-h {
+  font-family: var(--fd); font-size: clamp(22px, 3vw, 32px);
+  color: var(--on-dark); font-weight: 400; line-height: 1.2; margin-bottom: 8px;
+}
+.ft-sub { font-size: 14px; color: var(--on-dark2); margin-bottom: 28px; }
+.ft-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 44px; }
+.flink {
+  font-size: 13px; color: var(--clay); letter-spacing: 0.04em;
+  border-bottom: 0.5px solid rgba(232,168,130,0.25);
+  padding-bottom: 1px; transition: color 0.2s;
+}
+.flink:hover { color: var(--on-dark); }
+.ft-legal { font-size: 11px; color: rgba(196,168,130,0.35); letter-spacing: 0.06em; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .wrap { padding: 0 20px; }
+  .nav-inner { padding: 0 20px; }
+  .nav-links { gap: 18px; }
+  .exp-hero { padding: 40px 0 40px; }
+  .case-section { padding: 48px 0; }
+  .note-section { padding: 56px 0; }
+  .phone-gallery { gap: 18px; }
+  .phone-card img, .decision-img img { max-width: 170px; }
+  .decision-block { grid-template-columns: 1fr; gap: 28px; padding: 36px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Parul Tater</a>
+    <ul class="nav-links">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#explorations" class="active">Explorations</a></li>
+      <li><a href="index.html#field-notes">Field Notes</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────────── -->
+<section class="exp-hero">
+  <div class="wrap">
+    <a href="index.html#explorations" class="back-link">← All explorations</a>
+    <span class="overline">Design Exploration</span>
+    <h1 class="exp-hero-title">Event Board</h1>
+    <div class="exp-hero-meta">0→1 Build · Mobile · Web · 2025</div>
+    <p class="exp-hero-frame">
+      Exploring how AI-assisted development creates space for design thinking.
+    </p>
+    <div class="hero-rule"></div>
+  </div>
+</section>
+
+<!-- ── THE PROBLEM ─────────────────────────────────────────── -->
+<section class="case-section">
+  <div class="wrap">
+    <div class="case-body">
+      <p>
+        I love planning events — it's genuinely one of my things. So when a friend
+        announced she was moving countries and we decided to throw her a farewell
+        party, I was already thinking about how to make it work.
+      </p>
+      <p>
+        And so the familiar chaos began: a WhatsApp thread that starts with
+        "when is everyone free?" and slowly becomes something nobody can navigate.
+        Dates proposed and buried under memes. Someone pins the location. Someone
+        else pins the time. Three days later someone asks what time it starts. We
+        end up typing the same information into the event description, the chat,
+        a note somewhere — and still someone doesn't know who's bringing what.
+      </p>
+      <p>
+        WhatsApp has polls and events — but polls get buried in the thread, and
+        events only capture what's already decided. There's no working layer in
+        between, where the group figures things out before anything is final. And
+        expenses? Always an afterthought — a screenshot, some mental math, an
+        awkward ask a week later.
+      </p>
+      <p>I wanted to build that missing layer.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT IT IS ──────────────────────────────────────────── -->
+<section class="case-section">
+  <div class="wrap">
+    <div class="case-body">
+      <h2 class="case-h2">What it is</h2>
+      <p>
+        Event Board is a lightweight planning tool for small friend groups.
+        Everyone joins via a shared link — no app download, no account creation
+        friction. Inside, the group can vote on decisions, claim tasks, and log
+        expenses. WhatsApp stays for the banter — Event Board holds the things
+        that actually need to be remembered.
+      </p>
+    </div>
+    <div class="phone-gallery">
+      <div class="phone-card">
+        <a class="glightbox" href="assets/images/event-board/home-screen.png" data-gallery="event-board">
+          <img src="assets/images/event-board/home-screen.png"
+               alt="Event Board home screen showing a list of events joined via shared link">
+        </a>
+        <div class="phone-cap">Joining via a shared link — no account needed</div>
+      </div>
+      <div class="phone-card">
+        <a class="glightbox" href="assets/images/event-board/dashboard-overview.png" data-gallery="event-board">
+          <img src="assets/images/event-board/dashboard-overview.png"
+               alt="Event Board dashboard showing decisions, tasks, and expenses at a glance">
+        </a>
+        <div class="phone-cap">Decisions, tasks, and expenses — at a glance</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT CAME TOGETHER ────────────────────────────────── -->
+<section class="case-section">
+  <div class="wrap">
+    <div class="case-body">
+      <h3 class="case-h3">How it came together</h3>
+      <p>
+        Using AI for implementation meant I could spend my energy on the
+        decisions that actually mattered — what the app should do, how it should
+        behave, and why. I wrote those decisions down as I made them, mostly
+        because I kept hitting forks in the road and wanted to be honest with
+        myself about why I went one way and not the other.
+      </p>
+      <p>A few of those are worth sharing here.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── DESIGN DECISIONS ─────────────────────────────────────── -->
+<section class="case-section">
+  <div class="wrap">
+    <div class="case-body decisions-intro">
+      <span class="overline">Design decisions</span>
+      <h2 class="case-h2">Three forks in the road.</h2>
+    </div>
+
+    <div class="decision-block">
+      <div class="case-body">
+        <div class="decision-num">Decision 01</div>
+        <h3 class="decision-title">"Decisions," not Polls</h3>
+        <p>
+          The original wireframe used the word Polls — it felt natural. You're
+          asking a group to vote; that's a poll.
+        </p>
+        <p>
+          But WhatsApp already has polls, and they get buried. The problem isn't
+          the mechanism — it's that there's nowhere to see all your open questions
+          in one place, lock them when the group is ready, and connect them to
+          everything else about the event.
+        </p>
+        <p>
+          Renaming to Decisions also shifted the mental model. Polls implies
+          something ongoing; Decisions implies resolution. When a decision is
+          locked, the winning option is visually highlighted — it transforms from
+          "voting disabled" to "this is what we're doing."
+        </p>
+      </div>
+      <div class="decision-img">
+        <a class="glightbox" href="assets/images/event-board/decision-locked.png" data-gallery="event-board">
+          <img src="assets/images/event-board/decision-locked.png"
+               alt="A locked decision with the winning option highlighted in green">
+        </a>
+      </div>
+    </div>
+
+    <div class="decision-block">
+      <div class="case-body">
+        <div class="decision-num">Decision 02</div>
+        <h3 class="decision-title">Manual lock over auto-lock</h3>
+        <p>
+          The obvious implementation: once everyone votes, the decision locks
+          automatically.
+        </p>
+        <p>
+          The problem is late joiners. If someone joins after voting is
+          "complete," they can't participate. Worse, auto-lock assumes voting
+          percentage equals consensus — but in friend groups, silence isn't the
+          same as agreement.
+        </p>
+        <p>
+          The solution: the event creator locks manually, when the group feels
+          ready. It mirrors how real decisions happen — not by algorithm, but by
+          someone reading the room and calling it.
+        </p>
+      </div>
+      <div class="decision-img">
+        <a class="glightbox" href="assets/images/event-board/decisions-list.png" data-gallery="event-board">
+          <img src="assets/images/event-board/decisions-list.png"
+               alt="Decisions list showing one open decision and one already locked">
+        </a>
+      </div>
+    </div>
+
+    <div class="decision-block">
+      <div class="case-body">
+        <div class="decision-num">Decision 03</div>
+        <h3 class="decision-title">Self-assignment over assigned tasks</h3>
+        <p>
+          I initially thought of tasks as a to-do list — the organizer creates
+          items and assigns them to people. Clean, logical, top-down.
+        </p>
+        <p>
+          But that's not how favors work among friends. Nobody wants to be
+          voluntold. In the self-assign model, the organizer creates unassigned
+          tasks, and participants claim them by tapping "I'll do this" — closer to
+          a signup sheet than an assignment. People follow through more on things
+          they chose.
+        </p>
+        <p>That reframe changed how the whole feature felt.</p>
+      </div>
+      <div class="decision-img">
+        <a class="glightbox" href="assets/images/event-board/task-claim.png" data-gallery="event-board">
+          <img src="assets/images/event-board/task-claim.png"
+               alt="Tasks screen showing one unclaimed task and one claimed by the user">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHEN PROTOTYPE MEETS REALITY ────────────────────────── -->
+<section class="case-section">
+  <div class="wrap">
+    <div class="decision-block">
+      <div class="case-body">
+        <h2 class="case-h2">When prototype meets reality</h2>
+        <p>
+          I started with localStorage for identity — no login required, your name
+          saved in your browser. Simple, low-friction, good enough to test the
+          concept.
+        </p>
+        <p>
+          Real testing ended that quickly. A family member opened the link on a
+          different device and couldn't see their tasks from their laptop.
+          Cross-device sync wasn't an edge case — it was the whole point of a
+          shared group tool.
+        </p>
+        <p>Google authentication had been on the v2 roadmap. It moved to v1.</p>
+        <p>
+          Solo testing has a ceiling. Auth issues, data freshness, multi-user sync
+          — none of it shows up when it's just you clicking through your own app.
+          It shows up the moment a real person joins from a different device, in a
+          different context than the one you built in.
+        </p>
+      </div>
+      <div class="decision-img">
+        <a class="glightbox" href="assets/images/event-board/auth-screen.png" data-gallery="event-board">
+          <img src="assets/images/event-board/auth-screen.png"
+               alt="Sign-in screen with Google authentication, added after real-world testing">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── THE REAL TEST ────────────────────────────────────────── -->
+<section class="note-section">
+  <div class="wrap">
+    <div class="case-body">
+      <h2 class="case-h2">The real test</h2>
+      <p>
+        A few months after building this, I was planning another trip with
+        friends — a real one, not a test. And without really deciding to, I
+        didn't open Event Board.
+      </p>
+      <p>
+        The conversation stayed in WhatsApp. A date got proposed, a location got
+        pinned, an expense got mentioned in passing and immediately buried — the
+        exact chaos the app exists to solve.
+      </p>
+      <p>
+        It wasn't that the app didn't work. The decisions, the tasks, the expense
+        tracking all function as designed. It's that WhatsApp was already open,
+        already where everyone was talking, and asking five people to open a
+        second link for one decision was a bigger ask than it sounds.
+      </p>
+      <p>
+        That's a more useful finding than anything in the build itself: a good
+        standalone tool can still lose to an entrenched habit if it asks people to
+        leave it.
+      </p>
+      <p>
+        The fix probably isn't a better app — it's meeting people where they
+        already are. A bot that can post "Decision locked: Alaska ✈️" back into
+        the WhatsApp thread, or surface a quick vote without anyone leaving the
+        conversation, would close that gap in a way a separate destination never
+        could.
+      </p>
+      <p class="note-closer">
+        That's the version I'd actually want to use.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLOSE ───────────────────────────────────────────────── -->
+<section class="case-close">
+  <div class="wrap">
+    <div class="case-body">
+      <p>
+        Event Board is live and in active testing. Google OAuth is currently in
+        developer mode, so access is limited to test users for now — the code is
+        open on GitHub for anyone curious how it's built.
+      </p>
+    </div>
+    <div class="close-links">
+      <a href="#" class="btn-t">View on GitHub →</a>
+      <a href="index.html#explorations" class="btn-t">More explorations →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="ft-orn">✦ · ✦</div>
+  <h2 class="ft-h">Like what you see?<br>Let's chat.</h2>
+  <p class="ft-sub">Open to full-time UX design roles and select freelance projects.</p>
+  <div class="ft-links">
+    <a href="mailto:parulj12@gmail.com" class="flink">parulj12@gmail.com</a>
+    <a href="https://linkedin.com/in/parul-tater" target="_blank" class="flink">LinkedIn</a>
+    <a href="assets/parul-tater-resume.pdf" class="flink">Resume PDF</a>
+  </div>
+  <div class="ft-legal">All rights reserved · Parul Tater © 2025</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+<script>
+  const lightbox = GLightbox({ selector: '.glightbox' });
+</script>
+
+</body>
+</html>
