@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg">
 <style>
 /* ── TOKENS ─────────────────────────────────────────────── */
 :root {
@@ -241,6 +242,10 @@ nav {
   transition: border-color 0.2s, background 0.2s;
 }
 .fn-btn:hover { border-color: var(--clay); background: rgba(232,168,130,0.07); }
+.fn-btn-static {
+  cursor: default; opacity: 0.65; border-style: dashed;
+}
+.fn-btn-static:hover { border-color: rgba(245,236,215,0.25); background: transparent; }
 
 /* Field Notes gallery */
 .fn-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -316,7 +321,6 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
     <ul class="nav-links">
       <li><a href="#work" class="active">Work</a></li>
       <li><a href="#explorations">Explorations</a></li>
-      <li><a href="#field-notes">Field Notes</a></li>
       <li><a href="#about">About</a></li>
     </ul>
   </div>
@@ -335,7 +339,6 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
     </p>
     <div class="hero-ctas">
       <a href="#work" class="btn-p">See my work</a>
-      <a href="#field-notes" class="btn-t">Field Notes ↗</a>
     </div>
     <div class="hero-rule"></div>
   </div>
@@ -485,7 +488,7 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
           <span class="fn-tag">Real-world UX</span>
           <span class="fn-tag">Observations</span>
         </div>
-        <a href="#" class="fn-btn">Explore Field Notes</a>
+        <span class="fn-btn fn-btn-static">More field notes — coming soon</span>
       </div>
 
       <!-- Gallery: 2×2 -->
@@ -576,7 +579,7 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
 </footer>
 
 <script>
-  const ids = ['home','work','explorations','field-notes','about'];
+  const ids = ['home','work','explorations','about'];
   const links = document.querySelectorAll('.nav-links a');
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
