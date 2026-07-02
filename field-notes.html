@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Notes — Parul Tater</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg">
+<style>
+
+/* ── TOKENS ───────────────────────────────────────────────── */
+:root {
+  --bg:        #FFFFFF;
+  --bg-card:   #F4F3F1;
+  --bg-dark:   #1A1410;
+  --t1:        #1A1410;
+  --t2:        #3D2E24;
+  --t3:        #5C4030;
+  --on-dark:   #F5ECD7;
+  --on-dark2:  #C4A882;
+  --tc:        #C4704B;
+  --sienna:    #8B4513;
+  --clay:      #E8A882;
+  --gold:      #D4A847;
+  --leaf:      #4A6741;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fb: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--fb); background: var(--bg); color: var(--t2); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── LAYOUT ───────────────────────────────────────────────── */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 40px; }
+
+/* ── NAV ──────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  padding: 18px 0;
+}
+.nav-inner {
+  max-width: 1000px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--fd); font-size: 19px; font-weight: 400; color: var(--t1); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--t3); letter-spacing: 0.04em;
+  transition: color 0.2s; position: relative; padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--tc); }
+.nav-links a.active { color: var(--t1); font-weight: 500; }
+.nav-links a.active::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--tc);
+}
+
+/* ── PAGE HEADER ──────────────────────────────────────────── */
+.page-header {
+  padding: 72px 0 56px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.08);
+  position: relative;
+}
+.page-header::before {
+  content: ''; position: absolute; left: 0; top: 56px;
+  width: 3px; height: 180px;
+  background: linear-gradient(to bottom, var(--leaf), transparent);
+}
+.ph-overline {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--tc);
+  margin-bottom: 18px; display: block;
+}
+.ph-h1 {
+  font-family: var(--fd); font-size: clamp(36px, 5vw, 56px);
+  font-weight: 400; color: var(--t1); line-height: 1.06;
+  margin-bottom: 20px;
+}
+.ph-h1 em { font-style: italic; color: var(--sienna); }
+.ph-sub {
+  font-size: 15px; color: var(--t3); line-height: 1.72;
+  max-width: 520px; margin-bottom: 0;
+}
+
+
+
+/* ── MAIN CONTENT GRID ────────────────────────────────────── */
+.fn-body {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0;
+  align-items: start;
+  padding: 64px 0 96px;
+}
+
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+.fn-sidebar {
+  position: sticky;
+  top: 80px;
+  padding-right: 40px;
+}
+.sidebar-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--t3);
+  margin-bottom: 16px; display: block;
+}
+.sidebar-threads { list-style: none; }
+.sidebar-threads li { margin-bottom: 4px; }
+.sidebar-threads a {
+  font-size: 13px; color: var(--t3);
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0;
+  border-left: 2px solid transparent;
+  padding-left: 12px;
+  transition: color 0.2s, border-color 0.2s;
+  line-height: 1.3;
+}
+.sidebar-threads a:hover { color: var(--tc); border-left-color: rgba(196,112,75,0.3); }
+.sidebar-threads a.active { color: var(--t1); border-left-color: var(--tc); font-weight: 500; }
+.sidebar-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  flex-shrink: 0; opacity: 0.5;
+}
+.dot-chaska { background: var(--leaf); }
+
+.sidebar-divider {
+  border: none; border-top: 0.5px solid rgba(0,0,0,0.08);
+  margin: 24px 0;
+}
+.sidebar-back {
+  font-size: 12px; color: var(--t3); letter-spacing: 0.03em;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s;
+}
+.sidebar-back:hover { color: var(--tc); }
+
+/* ── ENTRIES COLUMN ───────────────────────────────────────── */
+.fn-entries { min-width: 0; }
+
+/* ── THREAD SECTION ───────────────────────────────────────── */
+.thread-section { margin-bottom: 72px; }
+.thread-section:last-child { margin-bottom: 0; }
+
+.thread-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+}
+.thread-badge {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 4px 12px; border-radius: 40px;
+  border: 0.5px solid;
+}
+.badge-chaska {
+  color: var(--leaf); border-color: rgba(74,103,65,0.35);
+  background: rgba(74,103,65,0.05);
+}
+
+.thread-title-text {
+  font-family: var(--fd); font-size: 15px; font-weight: 400;
+  color: var(--t3); font-style: italic;
+}
+
+/* ── ENTRY ────────────────────────────────────────────────── */
+.entry { margin-bottom: 56px; }
+.entry:last-child { margin-bottom: 0; }
+
+.entry-meta {
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 10px;
+}
+.entry-date {
+  font-size: 11px; color: var(--t3); letter-spacing: 0.05em;
+}
+
+.entry-title {
+  font-family: var(--fd); font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 400; color: var(--t1); line-height: 1.18;
+  margin-bottom: 10px;
+}
+.entry-title em { font-style: italic; color: var(--sienna); }
+
+.entry-intro {
+  font-size: 14px; color: var(--t2); line-height: 1.75;
+  max-width: 580px; margin-bottom: 22px;
+}
+
+/* ── PHOTO GRID — CHASKA ──────────────────────────────────── */
+.photo-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  grid-template-rows: 210px 150px;
+  gap: 6px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.photo-cell {
+  position: relative; overflow: hidden;
+  background: var(--bg-card);
+}
+.photo-cell.span-rows {
+  grid-row: 1 / 3;
+}
+.photo-cell img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.5s ease;
+}
+.photo-cell:hover img { transform: scale(1.03); }
+.photo-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 20px 12px 10px;
+  background: linear-gradient(transparent, rgba(26,20,16,0.62));
+  font-size: 10px; color: rgba(245,236,215,0.88);
+  line-height: 1.45; letter-spacing: 0.01em;
+}
+
+/* ── DESIGN OBSERVATION ───────────────────────────────────── */
+.design-obs {
+  border-left: 1.5px solid var(--tc);
+  padding: 10px 0 10px 16px;
+  margin-bottom: 8px;
+}
+.obs-label {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--tc);
+  margin-bottom: 6px; display: block;
+}
+.obs-text {
+  font-size: 13px; color: var(--t2); line-height: 1.7;
+  max-width: 560px;
+}
+.obs-text em {
+  font-style: italic; font-family: var(--fd); font-size: 15px;
+}
+
+/* ── ENTRY META TAGS ──────────────────────────────────────── */
+.entry-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 16px; }
+.etag {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--sienna);
+  border: 0.5px solid rgba(139,69,19,0.25);
+  padding: 3px 9px; border-radius: 20px;
+}
+
+
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
+.ft-orn { font-family: var(--fd); font-size: 16px; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 20px; }
+.ft-h {
+  font-family: var(--fd); font-size: clamp(22px, 3vw, 32px);
+  color: var(--on-dark); font-weight: 400; line-height: 1.2; margin-bottom: 8px;
+}
+.ft-sub { font-size: 14px; color: var(--on-dark2); margin-bottom: 28px; }
+.ft-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 44px; }
+.flink {
+  font-size: 13px; color: var(--clay); letter-spacing: 0.04em;
+  border-bottom: 0.5px solid rgba(232,168,130,0.25);
+  padding-bottom: 1px; transition: color 0.2s;
+}
+.flink:hover { color: var(--on-dark); }
+.ft-legal { font-size: 11px; color: rgba(196,168,130,0.35); letter-spacing: 0.06em; }
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .wrap { padding: 0 20px; }
+  .nav-inner { padding: 0 20px; }
+  .fn-body {
+    grid-template-columns: 1fr;
+  }
+  .fn-sidebar {
+    position: static;
+    padding-right: 0;
+    margin-bottom: 40px;
+  }
+  .sidebar-threads { display: flex; flex-wrap: wrap; gap: 8px; }
+  .sidebar-threads li { margin-bottom: 0; }
+  .sidebar-threads a {
+    border-left: none; padding-left: 0;
+    border: 0.5px solid rgba(0,0,0,0.12);
+    padding: 5px 12px; border-radius: 40px;
+    font-size: 12px;
+  }
+  .sidebar-threads a.active {
+    background: var(--t1); color: var(--on-dark);
+    border-color: var(--t1);
+  }
+  .sidebar-label { display: none; }
+  .sidebar-divider { display: none; }
+  .photo-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 160px 120px;
+  }
+  .photo-cell.span-rows { grid-row: 1; grid-column: 1 / 3; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Parul Tater</a>
+    <ul class="nav-links">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#explorations">Explorations</a></li>
+      <li><a href="field-notes.html" class="active">Field Notes</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── PAGE HEADER ──────────────────────────────────────────── -->
+<section class="page-header">
+  <div class="wrap">
+    <span class="ph-overline">Field Notes</span>
+    <h1 class="ph-h1">
+      Design lives in the details<br>you <em>notice</em> every day.
+    </h1>
+    <p class="ph-sub">
+      Observations from physical spaces, digital products, and the overlap between them.
+      Not case studies — a designer paying attention.
+    </p>
+  </div>
+</section>
+
+<!-- ── BODY ─────────────────────────────────────────────────── -->
+<div class="wrap">
+  <div class="fn-body" id="all">
+
+    <!-- ── SIDEBAR ───────────────────────────────────────────── -->
+    <aside class="fn-sidebar">
+      <span class="sidebar-label">Threads</span>
+      <ul class="sidebar-threads">
+        <li>
+          <a href="#chaska-life" class="active">
+            <span class="sidebar-dot dot-chaska"></span>
+            Chaska Life
+          </a>
+        </li>
+
+      </ul>
+      <hr class="sidebar-divider">
+      <a href="index.html" class="sidebar-back">← Back to portfolio</a>
+    </aside>
+
+    <!-- ── ENTRIES ────────────────────────────────────────────── -->
+    <main class="fn-entries">
+
+      <!-- ══ THREAD: CHASKA LIFE ══════════════════════════════ -->
+      <section class="thread-section" id="chaska-life">
+        <div class="thread-head">
+          <span class="thread-badge badge-chaska">✦ Chaska Life</span>
+          <span class="thread-title-text">Experience design beyond the screen</span>
+        </div>
+
+        <!-- Entry: Yoga & Brunch -->
+        <article class="entry">
+          <div class="entry-meta">
+            <span class="entry-date">January 2025</span>
+          </div>
+          <h2 class="entry-title">
+            Yoga &amp; Brunch — designing a morning that<br><em>feels like a fresh start</em>
+          </h2>
+          <p class="entry-intro">
+            Eight people, a winter backyard, and a brief that said: nourishing for the soul and the body.
+            Every decision — the outdoor rugs, the space heaters, the immunity shots before yoga, the pre-event
+            survey about dietary needs and experience levels — was a design constraint answered with intention.
+            Co-designed the yoga flow with a fellow UX designer who teaches yoga, so the session arc was as
+            considered as the table.
+          </p>
+
+          <!-- Photo grid -->
+          <div class="photo-grid">
+            <div class="photo-cell span-rows">
+              <img
+                src="assets/images/field-notes/yoga-brunch/yoga-brunch_tablescape-wide.png"
+                alt="The full yoga brunch table — lily stems in dark bottles, Buddha figure as visual anchor, woven textures throughout">
+              <div class="photo-caption">
+                The full table before guests arrived — lily stems in dark bottles, Buddha as visual anchor, woven texture running wall to wall.
+              </div>
+            </div>
+            <div class="photo-cell">
+              <img
+                src="assets/images/field-notes/yoga-brunch/yoga-brunch_buddha-muffins.png"
+                alt="Buddha figure in foreground, two-tier muffin stand behind — the visual center of the table composition">
+              <div class="photo-caption">
+                A $12 Buddha figure anchoring the visual center of a composed table — hierarchy without hierarchy.
+              </div>
+            </div>
+            <div class="photo-cell">
+              <img
+                src="assets/images/field-notes/yoga-brunch/yoga-brunch_chai-pour.png"
+                alt="Hand pouring chai from a printed teapot into a brass cup in morning sunlight">
+              <div class="photo-caption">
+                The chai moment — brewed fresh after yoga, poured in sunlight. A ritual, not just a drink.
+              </div>
+            </div>
+          </div>
+
+          <!-- Design observation -->
+          <div class="design-obs">
+            <span class="obs-label">Design observation</span>
+            <p class="obs-text">
+              I'd design the menu differently next time: fewer options, more presence.
+              <em>Complexity at transition points costs you the moment.</em>
+            </p>
+          </div>
+
+          <div class="entry-tags">
+            <span class="etag">Experience design</span>
+            <span class="etag">Service design</span>
+            <span class="etag">The Chaska Life</span>
+          </div>
+        </article>
+        <!-- /entry -->
+
+      </section>
+      <!-- /thread: chaska life -->
+
+
+
+    </main>
+    <!-- /entries -->
+
+  </div>
+</div>
+<!-- /body -->
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="wrap">
+    <div class="ft-orn">✦ · ✦</div>
+    <h2 class="ft-h">Like what you see?<br>Let's chat.</h2>
+    <p class="ft-sub">Open to full-time UX design roles and select freelance projects.</p>
+    <div class="ft-links">
+      <a href="mailto:parulj12@gmail.com" class="flink">parulj12@gmail.com</a>
+      <a href="https://linkedin.com/in/parul-tater" target="_blank" class="flink">LinkedIn</a>
+      <a href="assets/parul-tater-resume.pdf" class="flink">Resume PDF</a>
+    </div>
+    <div class="ft-legal">All rights reserved · Parul Tater © 2025</div>
+  </div>
+</footer>
+
+<script>
+  /* Sidebar active state on scroll */
+  const sections = document.querySelectorAll('.thread-section');
+  const sideLinks = document.querySelectorAll('.sidebar-threads a');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        sideLinks.forEach(l => {
+          l.classList.remove('active');
+          if (l.getAttribute('href') === '#' + e.target.id) {
+            l.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-80px 0px -50% 0px' });
+
+  sections.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>
