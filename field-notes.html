@@ -25,6 +25,7 @@
   --clay:      #E8A882;
   --gold:      #D4A847;
   --leaf:      #4A6741;
+  --slate:     #4A6070;
   --fd: 'Cormorant Garamond', Georgia, serif;
   --fb: 'DM Sans', system-ui, sans-serif;
 }
@@ -91,8 +92,6 @@ nav {
   max-width: 520px; margin-bottom: 0;
 }
 
-
-
 /* ── MAIN CONTENT GRID ────────────────────────────────────── */
 .fn-body {
   display: grid;
@@ -131,6 +130,7 @@ nav {
   flex-shrink: 0; opacity: 0.5;
 }
 .dot-chaska { background: var(--leaf); }
+.dot-product { background: var(--slate); }
 
 .sidebar-divider {
   border: none; border-top: 0.5px solid rgba(0,0,0,0.08);
@@ -165,6 +165,10 @@ nav {
   color: var(--leaf); border-color: rgba(74,103,65,0.35);
   background: rgba(74,103,65,0.05);
 }
+.badge-product {
+  color: var(--slate); border-color: rgba(74,96,112,0.35);
+  background: rgba(74,96,112,0.05);
+}
 
 .thread-title-text {
   font-family: var(--fd); font-size: 15px; font-weight: 400;
@@ -194,6 +198,14 @@ nav {
   font-size: 14px; color: var(--t2); line-height: 1.75;
   max-width: 580px; margin-bottom: 22px;
 }
+
+/* ── TEXT-ONLY ENTRY BODY ─────────────────────────────────── */
+.entry-body {
+  font-size: 14px; color: var(--t2); line-height: 1.8;
+  max-width: 580px; margin-bottom: 22px;
+}
+.entry-body p { margin-bottom: 16px; }
+.entry-body p:last-child { margin-bottom: 0; }
 
 /* ── PHOTO GRID — CHASKA ──────────────────────────────────── */
 .photo-grid {
@@ -253,8 +265,6 @@ nav {
   border: 0.5px solid rgba(139,69,19,0.25);
   padding: 3px 9px; border-radius: 20px;
 }
-
-
 
 /* ── FOOTER ───────────────────────────────────────────────── */
 footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
@@ -351,7 +361,12 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
             Chaska Life
           </a>
         </li>
-
+        <li>
+          <a href="#product-observations">
+            <span class="sidebar-dot dot-product"></span>
+            Product Observations
+          </a>
+        </li>
       </ul>
       <hr class="sidebar-divider">
       <a href="index.html" class="sidebar-back">← Back to portfolio</a>
@@ -432,6 +447,74 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
       <!-- /thread: chaska life -->
 
 
+      <!-- ══ THREAD: PRODUCT OBSERVATIONS ════════════════════ -->
+      <section class="thread-section" id="product-observations">
+        <div class="thread-head">
+          <span class="thread-badge badge-product">◎ Product Observations</span>
+          <span class="thread-title-text">Noticing what digital products get right — and what they miss</span>
+        </div>
+
+        <!-- Entry: Blood work app / knowledge inheritance -->
+        <article class="entry">
+          <div class="entry-meta">
+            <span class="entry-date">July 2024</span>
+          </div>
+          <h2 class="entry-title">
+            When clarity isn't enough —<br>the case for <em>inherited care</em> in health tech
+          </h2>
+
+          <div class="entry-body">
+            <p>
+              At a health tech hackathon, one concept stopped me: upload your blood work, receive insights back
+              in a warm, conversational tone — less clinical report, more caring relative explaining what it means
+              and what you might do about it.
+            </p>
+            <p>
+              It resonated immediately because it's something I already have. My dad is a doctor. Whenever I
+              receive blood work — anxious or not — I share it with him. What follows isn't a reading of numbers.
+              It's a conversation: what's good, what needs attention, what to add to my diet. The information
+              comes wrapped in care.
+            </p>
+            <p>
+              That made me wonder whether the real design problem here is about clarity — making medical data
+              more readable — or about something harder: replicating the feeling of being genuinely cared for.
+            </p>
+            <p>
+              I don't think a chatbot can fully replace that warmth. But I found myself thinking further.
+              What if the question isn't "can AI replicate my dad" but "what if my dad could teach the model
+              how he thinks?" Not just the information — the tone, the priorities, the way he decides what
+              matters. A knowledge transfer, the way recipes passed from grandmothers to mothers to us.
+              Except now it could happen with medical context, with a life philosophy, with anything a person
+              wants to leave behind or pass forward.
+            </p>
+            <p>
+              For people who have that person: a way to hold onto something precious.
+              For people who don't: access to something they never had — the collective wisdom of thoughtful
+              caregivers, delivered like it came from someone who knows you.
+            </p>
+          </div>
+
+          <!-- Design observation -->
+          <div class="design-obs">
+            <span class="obs-label">Design provocation</span>
+            <p class="obs-text">
+              The real design problem isn't clarity. It's inheritance.
+              <em>What if the people who care for us could teach the systems that outlast them?</em>
+            </p>
+          </div>
+
+          <div class="entry-tags">
+            <span class="etag">Health tech</span>
+            <span class="etag">Conversational UX</span>
+            <span class="etag">AI &amp; care</span>
+            <span class="etag">Information design</span>
+          </div>
+        </article>
+        <!-- /entry -->
+
+      </section>
+      <!-- /thread: product observations -->
+
 
     </main>
     <!-- /entries -->
@@ -451,7 +534,7 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
       <a href="https://linkedin.com/in/parul-tater" target="_blank" class="flink">LinkedIn</a>
       <a href="assets/parul-tater-resume.pdf" class="flink">Resume PDF</a>
     </div>
-    <div class="ft-legal">All rights reserved · Parul Tater © 2025</div>
+    <div class="ft-legal">All rights reserved · Parul Tater © 2026</div>
   </div>
 </footer>
 
