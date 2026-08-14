@@ -193,7 +193,6 @@ nav {
 .exp-title { font-family: var(--fd); font-size: 18px; font-weight: 500; color: var(--t1); margin-bottom: 6px; }
 .exp-desc { font-size: 13px; color: var(--t2); line-height: 1.6; }
 .exp-link { font-size: 12px; color: var(--sienna); margin-top: 12px; font-weight: 500; display: block; }
-.exp-placeholder { opacity: 0.36; border-style: dashed; pointer-events: none; }
 
 /* ── ORNAMENT ────────────────────────────────────────────── */
 .orn {
@@ -242,10 +241,6 @@ nav {
   transition: border-color 0.2s, background 0.2s;
 }
 .fn-btn:hover { border-color: var(--clay); background: rgba(232,168,130,0.07); }
-.fn-btn-static {
-  cursor: default; opacity: 0.65; border-style: dashed;
-}
-.fn-btn-static:hover { border-color: rgba(245,236,215,0.25); background: transparent; }
 
 /* Field Notes gallery */
 .fn-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -436,6 +431,18 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
       Shorter, scrappier, and sometimes more honest than a full case study.
     </p>
     <div class="exp-grid">
+
+      <a href="mychart-heuristic.html" class="exp-card"
+         style="border-color: rgba(196,112,75,0.22); background: #FAFAF8;">
+        <span class="exp-tag">Heuristic Evaluation · iOS App · 2026</span>
+        <div class="exp-title">MyChart Heuristic Evaluation</div>
+        <div class="exp-desc">
+          A usability review of the MyChart iOS app as a real patient —
+          eight findings across scheduling, lab results, and information
+          hierarchy.
+        </div>
+        <span class="exp-link">View project →</span>
+      </a>
       <a href="event-board.html" class="exp-card"
          style="border-color: rgba(196,112,75,0.22); background: #FAFAF8;">
         <span class="exp-tag">0→1 Build · Mobile · Web · 2025</span>
@@ -447,14 +454,7 @@ footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
         </div>
         <span class="exp-link">View project →</span>
       </a>
-      <div class="exp-card exp-placeholder">
-        <span class="exp-tag">Coming soon</span>
-        <div class="exp-title">More explorations</div>
-        <div class="exp-desc">
-          Visual observations, product notes, and in-progress thinking.
-          Being added as I go.
-        </div>
-      </div>
+
     </div>
   </div>
 </section>

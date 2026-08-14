@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyChart Heuristic Evaluation — Design Exploration | Parul Tater</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:        #FFFFFF;
+  --bg-card:   #F4F3F1;
+  --bg-dark:   #1A1410;
+  --t1:        #1A1410;
+  --t2:        #3D2E24;
+  --t3:        #5C4030;
+  --on-dark:   #F5ECD7;
+  --on-dark2:  #C4A882;
+  --tc:        #C4704B;
+  --sienna:    #8B4513;
+  --clay:      #E8A882;
+  --gold:      #D4A847;
+  --leaf:      #4A6741;
+  --amber:     #7A5C2E;
+  --fd: 'Cormorant Garamond', Georgia, serif;
+  --fb: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--fb); background: var(--bg); color: var(--t2); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+img { display: block; max-width: 100%; }
+
+/* ── LAYOUT ──────────────────────────────────────────────── */
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 40px; }
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  padding: 18px 0;
+}
+.nav-inner {
+  max-width: 1000px; margin: 0 auto; padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--fd); font-size: 19px; font-weight: 400; color: var(--t1); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--t3); letter-spacing: 0.04em;
+  transition: color 0.2s; position: relative; padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--tc); }
+.nav-links a.active { color: var(--t1); font-weight: 500; }
+.nav-links a.active::after {
+  content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 1px; background: var(--tc);
+}
+
+/* ── SHARED ──────────────────────────────────────────────── */
+.overline {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--tc); margin-bottom: 12px; display: block;
+}
+.btn-t {
+  font-size: 13px; color: var(--t1); border-bottom: 1px solid var(--t1);
+  padding-bottom: 1px; letter-spacing: 0.04em;
+  transition: color 0.2s, border-color 0.2s;
+}
+.btn-t:hover { color: var(--tc); border-color: var(--tc); }
+
+/* ── EXPLORATION HERO ────────────────────────────────────── */
+.exp-hero { padding: 64px 0 56px; }
+.back-link {
+  display: inline-block; font-size: 12px; color: var(--t3);
+  letter-spacing: 0.04em; margin-bottom: 32px; transition: color 0.2s;
+}
+.back-link:hover { color: var(--tc); }
+.exp-hero-title {
+  font-family: var(--fd); font-size: clamp(40px, 6vw, 60px);
+  font-weight: 400; color: var(--t1); line-height: 1.05; margin: 4px 0 14px;
+}
+.exp-hero-title em { font-style: italic; color: var(--sienna); }
+.exp-hero-meta {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--t3); margin-bottom: 24px;
+}
+.exp-hero-frame {
+  font-family: var(--fd); font-style: italic;
+  font-size: clamp(17px, 2vw, 20px); color: var(--sienna);
+  line-height: 1.6; max-width: 620px; font-weight: 400;
+}
+.hero-rule { border: none; border-top: 0.5px solid rgba(0,0,0,0.08); margin: 48px 0 0; }
+
+/* ── CONTEXT CALLOUT ─────────────────────────────────────── */
+.context-note {
+  background: var(--bg-card);
+  border-left: 2px solid var(--tc);
+  padding: 20px 24px;
+}
+.context-note p {
+  font-size: 14px; color: var(--t2); line-height: 1.75; max-width: 680px;
+}
+.context-note strong { font-weight: 500; color: var(--t1); }
+
+/* ── SEVERITY SUMMARY ────────────────────────────────────── */
+.severity-summary {
+  display: flex; gap: 0; flex-wrap: wrap;
+  padding: 28px 0; border-bottom: 0.5px solid rgba(0,0,0,0.07);
+  align-items: center;
+}
+.sev-count {
+  display: flex; align-items: center; gap: 8px;
+  padding-right: 28px; margin-right: 28px;
+  border-right: 0.5px solid rgba(0,0,0,0.08);
+}
+.sev-count:last-child { border-right: none; margin-right: 0; }
+.sev-dot { width: 8px; height: 8px; border-radius: 50%; }
+.sev-dot.high { background: var(--sienna); }
+.sev-dot.med  { background: var(--amber); }
+.sev-dot.low  { background: var(--leaf); }
+.sev-count-num {
+  font-family: var(--fd); font-size: 22px; font-weight: 400; color: var(--t1);
+}
+.sev-count-label {
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--t3);
+}
+
+/* ── SEVERITY BADGES ─────────────────────────────────────── */
+.badge {
+  font-size: 9px; font-weight: 500; letter-spacing: 0.14em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+  white-space: nowrap; font-family: var(--fb);
+}
+.badge-high { background: rgba(139,69,19,0.10); color: var(--sienna); }
+.badge-med  { background: rgba(122,92,46,0.10); color: var(--amber); }
+.badge-low  { background: rgba(74,103,65,0.10); color: var(--leaf); }
+
+/* ── FINDINGS SECTION ────────────────────────────────────── */
+.findings-section { padding: 0 0 80px; }
+
+/* ── FINDING BLOCK ───────────────────────────────────────── */
+.finding-block {
+  display: grid;
+  grid-template-columns: 1fr 228px;
+  gap: 52px;
+  align-items: start;
+  padding: 52px 0;
+  border-top: 0.5px solid rgba(0,0,0,0.07);
+}
+
+.finding-num-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.finding-num {
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--tc); font-weight: 500;
+}
+.finding-title {
+  font-family: var(--fd); font-size: clamp(20px, 2.4vw, 25px);
+  font-weight: 400; color: var(--t1); line-height: 1.2; margin-bottom: 10px;
+}
+.principle-tag {
+  display: inline-block; font-size: 10px; letter-spacing: 0.08em;
+  background: rgba(196,112,75,0.08); color: var(--tc);
+  padding: 3px 9px; border-radius: 3px; margin-bottom: 14px;
+  font-weight: 500; text-transform: uppercase;
+}
+.finding-desc {
+  font-size: 14px; color: var(--t2); line-height: 1.78; margin-bottom: 18px;
+}
+.finding-insight {
+  background: var(--bg-card);
+  border-left: 2px solid var(--sienna);
+  padding: 12px 16px;
+  border-radius: 0 4px 4px 0;
+  font-size: 13px; color: var(--t2); line-height: 1.65;
+}
+.finding-insight strong { font-weight: 500; color: var(--t1); }
+
+/* ── SCREENSHOT COLUMN ───────────────────────────────────── */
+.phone-wrap {
+  width: 228px;
+}
+.phone-wrap img {
+  width: 100%; height: auto;
+  border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  display: block;
+}
+.phone-caption {
+  margin-top: 12px;
+  font-size: 12px; color: var(--t3);
+  line-height: 1.55; font-style: italic;
+  max-width: 228px;
+}
+
+
+/* ── WHAT'S NEXT ─────────────────────────────────────────── */
+.next-section {
+  background: var(--bg-card);
+  padding: 72px 0;
+}
+.next-section .next-h {
+  font-family: var(--fd); font-size: clamp(24px, 3vw, 32px);
+  font-weight: 400; color: var(--t1); line-height: 1.15; margin-bottom: 20px;
+}
+.next-section p {
+  font-size: 15px; color: var(--t2); line-height: 1.78;
+  max-width: 620px; margin-bottom: 20px;
+}
+.next-items {
+  margin-top: 36px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.next-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 20px 0;
+  border-top: 0.5px solid rgba(0,0,0,0.07);
+}
+.next-item:last-child { border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+.next-arrow { font-family: var(--fd); font-size: 18px; color: var(--tc); padding-top: 2px; }
+.next-item-title { font-size: 14px; font-weight: 500; color: var(--t1); margin-bottom: 4px; }
+.next-item-desc { font-size: 13px; color: var(--t3); line-height: 1.65; }
+
+/* ── CLOSE ───────────────────────────────────────────────── */
+.case-close { padding: 64px 0 96px; }
+.close-links { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer { background: var(--bg-dark); padding: 64px 0; text-align: center; }
+.ft-orn { font-family: var(--fd); font-size: 16px; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 20px; }
+.ft-h {
+  font-family: var(--fd); font-size: clamp(22px, 3vw, 32px);
+  color: var(--on-dark); font-weight: 400; line-height: 1.2; margin-bottom: 8px;
+}
+.ft-sub { font-size: 14px; color: var(--on-dark2); margin-bottom: 28px; }
+.ft-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 44px; }
+.flink {
+  font-size: 13px; color: var(--clay); letter-spacing: 0.04em;
+  border-bottom: 0.5px solid rgba(232,168,130,0.25);
+  padding-bottom: 1px; transition: color 0.2s;
+}
+.flink:hover { color: var(--on-dark); }
+.ft-legal { font-size: 11px; color: rgba(196,168,130,0.35); letter-spacing: 0.06em; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .wrap { padding: 0 20px; }
+  .nav-inner { padding: 0 20px; }
+  .nav-links { gap: 18px; }
+  .exp-hero { padding: 40px 0 40px; }
+  .finding-block {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .phone-wrap { width: 180px; }
+  .phone-caption { max-width: 180px; }
+  .paired-screenshots { max-width: 340px; gap: 16px; }
+  .severity-summary { gap: 16px; }
+  .sev-count { border-right: none; padding-right: 0; margin-right: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Parul Tater</a>
+    <ul class="nav-links">
+      <li><a href="index.html#work">Work</a></li>
+      <li><a href="index.html#explorations" class="active">Explorations</a></li>
+      <li><a href="index.html#field-notes">Field Notes</a></li>
+      <li><a href="index.html#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────────── -->
+<section class="exp-hero">
+  <div class="wrap">
+    <a href="index.html#explorations" class="back-link">← All explorations</a>
+    <span class="overline">Design Exploration · Heuristic Evaluation</span>
+    <h1 class="exp-hero-title">MyChart Mobile —<br><em>What's working<br>and what isn't</em></h1>
+    <div class="exp-hero-meta">Heuristic Evaluation · iOS App · August 2026</div>
+    <p class="exp-hero-frame">
+      Eight findings across five flows — evaluated as a real patient, not a researcher with a protocol.
+    </p>
+    <div class="hero-rule"></div>
+  </div>
+</section>
+
+<!-- ── CONTEXT + SEVERITY ───────────────────────────────────── -->
+<section>
+  <div class="wrap">
+    <div class="context-note" style="margin: 40px 0 0;">
+      <p><strong>Why this app?</strong> I use MyChart as a patient managing an ongoing health condition. The evaluation came out of genuine frustration. I reviewed it against Nielsen's 10 Usability Heuristics and foundational UX principles, documenting eight distinct findings across five key flows.</p>
+    </div>
+    <div class="severity-summary">
+      <div class="sev-count">
+        <span class="sev-dot high"></span>
+        <span class="sev-count-num">4</span>
+        <span class="sev-count-label">High</span>
+      </div>
+      <div class="sev-count">
+        <span class="sev-dot med"></span>
+        <span class="sev-count-num">2</span>
+        <span class="sev-count-label">Medium</span>
+      </div>
+      <div class="sev-count">
+        <span class="sev-dot low"></span>
+        <span class="sev-count-num">2</span>
+        <span class="sev-count-label">Low</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINDINGS ──────────────────────────────────────────────── -->
+<section class="findings-section">
+  <div class="wrap">
+
+    <!-- FINDING 01 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 01</div>
+          <span class="badge badge-med">Medium</span>
+        </div>
+        <h2 class="finding-title">Patient selection ignores family hierarchy</h2>
+        <span class="principle-tag">Mental Model Alignment</span>
+        <p class="finding-desc">The app opens with three equal-weight circles — me and my two children. But I'm the account holder. My children are dependents I manage on their behalf, not co-equal users. The flat structure requires me to consciously select myself every time, adding cognitive friction at the very first step.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> A primary account view with dependents shown as a secondary tier would match how families actually think about shared healthcare management.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0710.jpg" alt="Patient selection screen showing three equal-weight profile circles">
+        </div>
+        <p class="phone-caption">Three equal-weight profiles — the account holder has no visual priority over dependents</p>
+      </div>
+    </div>
+
+    <!-- FINDING 02 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 02</div>
+          <span class="badge badge-high">High</span>
+        </div>
+        <h2 class="finding-title">Home screen treats everything as equally urgent</h2>
+        <span class="principle-tag">Information Hierarchy · Cognitive Load</span>
+        <p class="finding-desc">The home screen surfaces medical results, billing, admin prompts, and promotional content — all in the same card format with the same visual weight. A patient logging in to check a test result has to scan through everything to find what matters.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> Content should be tiered by urgency: medical (test results, upcoming appointments) above administrative, with promotional content clearly separated or optional.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0711.jpg" alt="MyChart home screen showing mixed-priority cards with identical visual weight">
+        </div>
+        <p class="phone-caption">Admin prompt and billing card share the same card format as test results — no visual triage</p>
+      </div>
+    </div>
+
+    <!-- FINDING 03 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 03</div>
+          <span class="badge badge-med">Medium</span>
+        </div>
+        <h2 class="finding-title">Shortcut icons look like navigation tabs — but aren't</h2>
+        <span class="principle-tag">Affordances &amp; Signifiers · Consistency</span>
+        <p class="finding-desc">Six shortcut icons appear at the top of the home screen. As you scroll, they collapse into smaller floating icons that persist as you move through content. The consistent icon-plus-label format within a sticky horizontal strip is the visual language of a tab bar — a pattern that conventionally signals in-place view switching, not navigation to a new screen. But tapping these opens entirely new screens, which breaks the expected interaction model.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> If tabs are introduced elsewhere (e.g. for notification categories), the shortcuts need to be visually differentiated — different position, style, or interaction pattern.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0713.jpg" alt="Scrolled home screen showing floating shortcut icons that visually resemble a tab bar">
+        </div>
+        <p class="phone-caption">Shortcuts collapse into floating icons as you scroll — tab bar pattern, but they navigate rather than switch views</p>
+      </div>
+    </div>
+
+    <!-- FINDING 04 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 04</div>
+          <span class="badge badge-low">Low</span>
+        </div>
+        <h2 class="finding-title">Lab order cards are verbose by default</h2>
+        <span class="principle-tag">Progressive Disclosure · Task-Oriented Design</span>
+        <p class="finding-desc">Upcoming test reminders display the full instruction text, the panel name, clinical instructions, and a download button — all expanded by default. The primary action is to download the document. Everything else is context.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> Lead with the test name and download action. Expand instructions on tap for users who need guidance.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0719.jpg" alt="Upcoming Tests card showing full clinical instructions expanded by default">
+        </div>
+        <p class="phone-caption">Full clinical instructions shown by default — the download button is the only action most patients need</p>
+      </div>
+    </div>
+
+    <!-- FINDING 05 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 05</div>
+          <span class="badge badge-high">High</span>
+        </div>
+        <h2 class="finding-title">Scheduling collects information before checking availability</h2>
+        <span class="principle-tag">Error Prevention · Efficiency of Use · Progressive Disclosure</span>
+        <p class="finding-desc">In the Women's Health scheduling flow, the app asks for pregnancy status before checking whether any appointments are actually available — so if the answer turns out to be "No available times," the question served no purpose. The pregnancy prompt may have clinical logic behind it (it could affect which providers are shown), but that makes it a candidate for post-booking intake rather than a pre-availability gate. More broadly, collecting specialty-specific information upfront, before confirming a slot exists, prioritises data collection over the patient's actual goal.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> Checking availability first — then collecting intake details once a slot is confirmed — would reduce dead-end friction. Specialty-specific questions are already expected as pre-visit forms; moving them there keeps the booking flow focused on the one thing the patient came to do.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0725.jpg" alt="Women's Health flow asking pregnancy status before checking availability">
+        </div>
+        <p class="phone-caption">Pregnancy status collected before any availability is checked</p>
+      </div>
+    </div>
+
+    <!-- FINDING 06 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 06</div>
+          <span class="badge badge-high">High</span>
+        </div>
+        <h2 class="finding-title">No provider-first entry point in scheduling</h2>
+        <span class="principle-tag">Mental Model Alignment · Efficiency of Use</span>
+        <p class="finding-desc">The scheduling flow eventually shows which provider will see you — but only after you've navigated through a specialty menu to reach them. There's no path that starts with "Who do you want to see?" For a follow-up with an established provider, you have to know their specialty category and navigate there yourself. And if your provider's specialty isn't listed in the menu — endocrinology, for example, isn't — the flow has no way to reach them at all.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> A provider-first entry point — "Book with Dr. Katta?" — would better match how returning patients think about scheduling. Established provider relationships are already in the system; surfacing them as the default starting point would save steps and feel significantly more personal.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0724.jpg" alt="Specialty selection screen with no provider-first option">
+        </div>
+        <p class="phone-caption">Specialty menu — no path to start from your established provider</p>
+      </div>
+    </div>
+
+    <!-- FINDING 07 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 07</div>
+          <span class="badge badge-high">High</span>
+        </div>
+        <h2 class="finding-title">"No available times" is a dead end</h2>
+        <span class="principle-tag">Error Recovery</span>
+        <p class="finding-desc">After a multi-step scheduling flow, the failure state reads: "No available times. Try a different search or call us." The recovery option is a phone call — which is exactly what the app was intended to replace. No saved preferences, no nearby provider suggestion, no indication of when slots might open.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> Offer meaningful recovery: save the search criteria, suggest an alternative provider with availability, or allow the patient to set a notification when a slot opens.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0727.jpg" alt="Schedule appointment screen showing No available times with no useful recovery path">
+        </div>
+        <p class="phone-caption">Dead end — after a multi-step flow, the only recovery option is a phone call</p>
+      </div>
+    </div>
+
+    <!-- FINDING 08 -->
+    <div class="finding-block">
+      <div class="finding-left">
+        <div class="finding-num-row">
+          <div class="finding-num">Finding 08</div>
+          <span class="badge badge-low">Low</span>
+        </div>
+        <h2 class="finding-title">Lab results are siloed by test order, not by blood draw</h2>
+        <span class="principle-tag">Mental Model Alignment · Information Architecture</span>
+        <p class="finding-desc">MyChart handles grouped panels well — a lipid panel shows LDL, HDL, triglycerides, and cholesterol together in one trend view. But results from separately ordered tests live in isolation: HbA1c has its own trend, vitamin B12 has its own, vitamin D has its own. As someone tracking multiple markers across blood draws, I find myself navigating back to the test results list, locating each result individually, and opening it in a separate screen. There's no unified way to see all my blood work in one place.</p>
+        <div class="finding-insight"><strong>Opportunity:</strong> A blood draw summary view — not a single merged chart, but a dashboard of all lab results navigable from one screen — would match how patients think about their lab work. Individual trend charts can stay as they are; the missing layer is a way to scan all results without navigating back and forth each time.</div>
+      </div>
+      <div class="finding-right">
+        <div class="phone-wrap">
+          <img src="assets/images/mychart/IMG_0716.jpg" alt="Result Trends screen showing a single glucose trend chart in isolation">
+        </div>
+        <p class="phone-caption">One result at a time — no way to see all blood draw results without navigating back to the list</p>
+      </div>
+    </div>
+
+  </div><!-- /wrap -->
+</section>
+
+<!-- ── WHAT I'D EXPLORE NEXT ─────────────────────────────────── -->
+<section class="next-section">
+  <div class="wrap">
+    <span class="overline">Where to focus</span>
+    <h2 class="next-h">Four of the eight findings are in one flow.</h2>
+    <p>The appointment scheduling flow compounds. A patient trying to book an appointment hits wrong-order questions, a missing provider relationship, and a dead-end failure state — all in a single task. Fixing the sequence and the recovery state would meaningfully reduce the number of patients who give up and call instead.</p>
+    <p>The home screen information hierarchy is the second priority: it affects every session, not just scheduling attempts. Medical content needs a clear visual priority over admin and promotional content.</p>
+
+    <div class="next-items">
+      <div class="next-item">
+        <div class="next-arrow">→</div>
+        <div>
+          <div class="next-item-title">Competitive audit</div>
+          <div class="next-item-desc">How do other patient-facing and scheduling-first apps handle the established provider relationship? The question isn't what's technically possible — it's what mental model patients actually bring to the scheduling experience.</div>
+        </div>
+      </div>
+      <div class="next-item">
+        <div class="next-arrow">→</div>
+        <div>
+          <div class="next-item-title">Secondary research</div>
+          <div class="next-item-desc">Understand whether calling instead of using the app is a common pattern — and what triggers the switch. If enough patients default to the phone, that's a systems problem, not a UI problem.</div>
+        </div>
+      </div>
+      <div class="next-item">
+        <div class="next-arrow">→</div>
+        <div>
+          <div class="next-item-title">Redesign concept</div>
+          <div class="next-item-desc">A provider-profile driven scheduling flow — browse available doctors in a specialty, read their bios and focus areas, choose who you want to see, then pick a time from their calendar. Specialty-specific clinical questions move to post-booking intake forms, where they already belong.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLOSE ───────────────────────────────────────────────── -->
+<section class="case-close">
+  <div class="wrap">
+    <div class="close-links">
+      <a href="index.html#explorations" class="btn-t">More explorations →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="ft-orn">✦ · ✦</div>
+  <h2 class="ft-h">Like what you see?<br>Let's chat.</h2>
+  <p class="ft-sub">Open to full-time UX design roles and select freelance projects.</p>
+  <div class="ft-links">
+    <a href="mailto:parulj12@gmail.com" class="flink">parulj12@gmail.com</a>
+    <a href="https://linkedin.com/in/parul-tater" target="_blank" class="flink">LinkedIn</a>
+    <a href="assets/parul-tater-resume.pdf" class="flink">Resume PDF</a>
+  </div>
+  <div class="ft-legal">All rights reserved · Parul Tater © 2026</div>
+</footer>
+
+</body>
+</html>
